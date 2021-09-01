@@ -7,6 +7,8 @@
 			startRGB: {value:"#ff0000",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
 			transitionRGB: {value:"#ffc864",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
 			endRGB: {value:"#ffffff",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
+			startMired: {value:"",required:false,validate:RED.validators.number()},
+			endMired: {value:"",required:false,validate:RED.validators.number()},
 			transitionTime: {value:"15",required:true,validate:RED.validators.number()},
 			transitionTimeUnits: {value:"Minute"},
 			steps: {value:"30",required:true,validate:RED.validators.number()},
@@ -52,6 +54,14 @@
 	<div class="form-row">
 		<label for="node-input-endRGB"><i class="fa fa-eye-dropper"></i> End Color</label>
 		<input type="color" id="node-input-endRGB" style="text-align:end; width:100px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-startMired"><i class="fa fa-percent"></i> Starting mireds</label>
+		<input type="text" id="node-input-startMired" style="text-align:end; width:70px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-endMired"><i class="fa fa-percent"></i> Ending mireds</label>
+		<input type="text" id="node-input-endMireds" style="text-align:end; width:70px !important">
 	</div>
 	<div class="form-row">
 		<label for="node-input-startBright"><i class="fa fa-percent"></i> Starting Brightness</label>
