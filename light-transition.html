@@ -7,8 +7,8 @@
 			startRGB: {value:"#ff0000",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
 			transitionRGB: {value:"#ffc864",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
 			endRGB: {value:"#ffffff",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
-			startMired: {value:"",required:false,validate:RED.validators.number()},
-			endMired: {value:"",required:false,validate:RED.validators.number()},
+			startMired: {value:"",required:false,validate:RED.validators.regex(/^\d*$/)},
+			endMired: {value:"",required:false,validate:RED.validators.regex(/^\d*$/)},
 			transitionTime: {value:"15",required:true,validate:RED.validators.number()},
 			transitionTimeUnits: {value:"Minute"},
 			steps: {value:"30",required:true,validate:RED.validators.number()},
@@ -44,24 +44,24 @@
 		<input type="text" id="node-input-steps" style="text-align:end; width:100px !important">
 	</div>
 	<div class="form-row">
-		<label for="node-input-startRGB"><i class="fa fa-eye-dropper"></i> Starting Color</label>
+		<label for="node-input-startRGB"><i class="fa fa-eyedropper"></i> Starting Color</label>
 		<input type="color" id="node-input-startRGB" style="text-align:end; width:100px !important">
 	</div>
 	<div class="form-row">
-		<label for="node-input-transitionRGB"><i class="fa fa-eye-dropper"></i> Intermediate Color</label>
+		<label for="node-input-transitionRGB"><i class="fa fa-eyedropper"></i> Intermediate Color</label>
 		<input type="color" id="node-input-transitionRGB" style="text-align:end; width:100px !important">
 	</div>
 	<div class="form-row">
-		<label for="node-input-endRGB"><i class="fa fa-eye-dropper"></i> End Color</label>
+		<label for="node-input-endRGB"><i class="fa fa-eyedropper"></i> End Color</label>
 		<input type="color" id="node-input-endRGB" style="text-align:end; width:100px !important">
 	</div>
 	<div class="form-row">
-		<label for="node-input-startMired"><i class="fa fa-percent"></i> Starting mireds</label>
+		<label for="node-input-startMired"><i class="fa fa-arrows-h"></i> Starting mireds</label>
 		<input type="text" id="node-input-startMired" style="text-align:end; width:70px !important">
 	</div>
 	<div class="form-row">
-		<label for="node-input-endMired"><i class="fa fa-percent"></i> Ending mireds</label>
-		<input type="text" id="node-input-endMireds" style="text-align:end; width:70px !important">
+		<label for="node-input-endMired"><i class="fa fa-arrows-h"></i> Ending mireds</label>
+		<input type="text" id="node-input-endMired" style="text-align:end; width:70px !important">
 	</div>
 	<div class="form-row">
 		<label for="node-input-startBright"><i class="fa fa-percent"></i> Starting Brightness</label>
@@ -85,9 +85,9 @@
 </script>
 
 <script type="text/x-red" data-help-name="light-transition">
-		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code> and <code>msg.payload.rgb_color</code> to use with a light entity.</p>
+		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
 	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
 	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.  
 	<p>Properties can be overridden via <code>msg.transition</code> messages supplemented with property name.</p>
-	<p>Accepted messages for loop are <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition.startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, and <code>msg.transition.transitionType</code></p>
+	<p>Accepted messages for loop are <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition.startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startMired</code>, <code>msg.transition.endMired</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, and <code>msg.transition.transitionType</code></p>
 </script>
