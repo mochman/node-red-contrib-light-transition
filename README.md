@@ -64,5 +64,7 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 ## **Changelog**
 v1.1.0 (2 Sep 21) - Added color_temp(mired) transition & fixed linear brightness_pct formula.
+
 v1.0.1 (1 Sep 21) - Icon fix
+
 v1.0.0 (1 Sep 21) - Initial release
