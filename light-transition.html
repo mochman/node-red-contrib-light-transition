@@ -1,0 +1,83 @@
+<script type="text/javascript">
+	RED.nodes.registerType('light-transition',{
+		category: 'function',
+		color:"#33B2FF",
+		defaults: {
+			name: {value:""},
+			startRGB: {value:"#ff0000",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
+			transitionRGB: {value:"#ffc864",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
+			endRGB: {value:"#ffffff",required:false,validate:RED.validators.regex(/^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$/i)},
+			transitionTime: {value:"15",required:true,validate:RED.validators.number()},
+			transitionTimeUnits: {value:"Minute"},
+			steps: {value:"30",required:true,validate:RED.validators.number()},
+			startBright: {value:"1",required:true,validate:RED.validators.regex(/^[1-9][0-9]?$|^100$/)},
+			endBright: {value:"100",required:true,validate:RED.validators.number(/^[1-9][0-9]?$|^100$/)},
+			transitionType: {value:"Linear"},
+		},
+		inputs:1,
+		outputs:2,
+		icon: "font-awesome/fa-lightbulb-o",
+		label: function() {
+			return this.name || this.transitionTime + " " + this.transitionTimeUnits + " Transition";
+		},
+		labelStyle: function() {
+			return this.name?"node_label_italic":"";
+		},
+		outputLabels: ["original msg","stopped msg"]
+	});
+</script>
+
+<script type="text/x-red" data-template-name="light-transition">
+	<div class="form-row">
+		<label for="node-input-transitionTime"><i class="fa fa-clock-o"></i> Total Time</label>
+		<input type="text" id="node-input-transitionTime" style="text-align:end; width:70px !important">
+		<select id="node-input-transitionTimeUnits" style="width:140px !important">
+			<option value="Second">Seconds</option>
+			<option value="Minute">Minutes</option>
+			<option value="Hour">Hours</option>
+		</select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-steps"><i class="fa fa-repeat"></i> # of steps</label>
+		<input type="text" id="node-input-steps" style="text-align:end; width:100px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-startRGB"><i class="fa fa-eye-dropper"></i> Starting Color</label>
+		<input type="color" id="node-input-startRGB" style="text-align:end; width:100px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-transitionRGB"><i class="fa fa-eye-dropper"></i> Intermediate Color</label>
+		<input type="color" id="node-input-transitionRGB" style="text-align:end; width:100px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-endRGB"><i class="fa fa-eye-dropper"></i> End Color</label>
+		<input type="color" id="node-input-endRGB" style="text-align:end; width:100px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-startBright"><i class="fa fa-percent"></i> Starting Brightness</label>
+		<input type="text" id="node-input-startBright" style="text-align:end; width:70px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-endBright"><i class="fa fa-percent"></i> Ending Brightness</label>
+		<input type="text" id="node-input-endBright" style="text-align:end; width:70px !important">
+	</div>
+	<div class="form-row">
+		<label for="node-input-transitionType"><i class="fa fa-line-chart"></i> Transition Style</label>
+		<select id="node-input-transitionType" style="width:140px !important">
+			<option value="Linear">Linear</option>
+			<option value="Exponential">Exponential</option>
+		</select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name"></input>
+	</div>
+</script>
+
+<script type="text/x-red" data-help-name="light-transition">
+		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code> and <code>msg.payload.rgb_color</code> to use with a light entity.</p>
+	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
+	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.  
+	<p>Properties can be overridden via <code>msg.transition</code> messages supplemented with property name.</p>
+	<p>Accepted messages for loop are <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition.startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, and <code>msg.transition.transitionType</code></p>
+</script>
