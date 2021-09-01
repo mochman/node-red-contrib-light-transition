@@ -24,8 +24,10 @@ module.exports = function (RED) {
 			this.nodeduration = n.nodeduration || 1;
 			this.nodemaxtimeout = n.nodemaxtimeout || 1;
 			this.startRGB = n.startRGB || "#ff0000";
-			this.transitionRGB = n.transitionRGB || "#ffc864";
+			this.transitionRGB = n.transitionRGB || this.startRGB;
 			this.endRGB = n.endRGB || "#ffffff";
+			this.startMired = parseInt(n.startMired) || 200;
+			this.endMired = parseInt(n.endMired) || 600;
 			this.transitionTime = parseInt(n.transitionTime) || 15;
 			this.transitionTimeUnits = n.transitionTimeUnits || "Minute";
 			this.steps = parseInt(n.steps) || 30;
@@ -73,6 +75,26 @@ module.exports = function (RED) {
 								} else {
 									node.status({ fill: "red", shape: "ring", text: "msg.transition.endRGB must be formatted like #ffab13" });
 									node.error('Invalid Attribbute: msg.transition.endRGB, value must be formatted like #ffab13');
+									return;
+								}
+							}
+
+							if (msg.transition.startMired != undefined) {
+								if (typeof msg.transition.startMired === 'number' && msg.transition.startMired > 0) {
+									node.startMired = parseInt(msg.transition.startMired);
+								} else {
+									node.status({ fill: "red", shape: "ring", text: "msg.transition.startMired must be a positive integer" });
+									node.error('Invalid Attribbute: msg.transition.startMired, value must be a positive integer');
+									return;
+								}
+							}
+
+							if (msg.transition.endMired != undefined) {
+								if (typeof msg.transition.endMired === 'number' && msg.transition.endMired > 0) {
+									node.endMired = parseInt(msg.transition.endMired);
+								} else {
+									node.status({ fill: "red", shape: "ring", text: "msg.transition.endMired must be a positive integer" });
+									node.error('Invalid Attribbute: msg.transition.endMired, value must be a positive integer');
 									return;
 								}
 							}
@@ -194,6 +216,7 @@ module.exports = function (RED) {
 									var lightMsg = {payload: {
 										brightness_pct: node.startBright,
 										rgb_color: colors[0],
+										color_temp: node.startMired,
 									}}
 									node.send([lightMsg, null]);
 									msg._timerpass = true;
@@ -210,6 +233,7 @@ module.exports = function (RED) {
 																	var lightMsg = {payload: {
 																		brightness_pct: node.endBright,
 																		rgb_color: colors[2],
+																		color_temp: node.endMired,
 																	}}
 																	mlmsg = RED.util.cloneMessage(msg);
 																	mlmsg.payload = "complete";
@@ -238,6 +262,7 @@ module.exports = function (RED) {
 																					colorChange[i] = colors[1][i] + (data-tMid) * d2[i];
 																				}
 																			}
+																			var miredChange = Math.floor((node.endMired - node.startMired) / (node.steps-1) * data + node.startMired);
 																			var brightnessChange = 0;
 																			if(node.transitionType == 'Exponential') {
 																				if(node.startBright <= node.endBright) {
@@ -246,11 +271,12 @@ module.exports = function (RED) {
 																					brightnessChange = node.startBright - Math.floor(node.endBright * Math.exp(exponB*data)) + node.endBright;
 																				}
 																			} else {
-																				brightnessChange = Math.floor((node.endBright - node.startBright) / node.steps * data + node.startBright);
+																				brightnessChange = Math.floor((node.endBright - node.startBright) / (node.steps-1) * data + node.startBright);
 																			}
 																			var lightMsg = {payload: {
 																				brightness_pct: brightnessChange,
 																				rgb_color: colorChange,
+																				color_temp: miredChange,
 																			}};
 																			node.send([lightMsg, null]);
 																			timeout = null;
