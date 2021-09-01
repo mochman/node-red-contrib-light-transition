@@ -1,6 +1,3 @@
-
-  
-
 # Light Transition for node-red
 
 ----------------------------
