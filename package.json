@@ -18,8 +18,8 @@
     }
   },
   "dependencies": {
-		"loop": "2.1.2"
-	},
+    "loop": "2.1.2"
+  },
   "author": {
     "name": "Luke Moch",
     "url": "https://www.github.com/mochman/"
