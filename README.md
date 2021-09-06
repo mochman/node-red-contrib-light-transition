@@ -106,6 +106,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 
 ## **Changelog**
+v1.2.1 (6 Sep 21) - Changed Image path in README
+
 v1.2.0 (6 Sep 21) - Added the ability to change the type of color transition.
 
 v1.1.0 (2 Sep 21) - Added color_temp(mired) transition & fixed linear brightness_pct formula.
