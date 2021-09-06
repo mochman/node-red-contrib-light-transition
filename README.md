@@ -73,24 +73,24 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 ## **Examples**
 1. If you want to configure the node without using the node options, you can send it a ```msg.transition``` object:
 
-![](./images/configure_dynamic.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/configure_dynamic.png?raw=true)
 
   - *Here is the config for the Configuration Node:*
 
-![](./images/dynamic_settings.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/dynamic_settings.png?raw=true)
 
 2. In this example, you have one light that has both color & white light, but doesn't let you send a ```rgbw_color``` value to it.
 
-![](./images/multiple_flow.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/multiple_flow.png?raw=true)
 
 - The first transition node changes the color from red to yellow / brightness 1 to 100%.
 
-![](./images/node_settings.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/node_settings.png?raw=true)
 
 - The first "Turn LEDs on" node accepts JSONata data like this:
 
-![](./images/call_service.png)
-![](./images/jsonata.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/call_service.png?raw=true)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/jsonata.png?raw=true)
 
 
  - The "Complete" switch node only passes a message when the ```msg.payload``` = ```complete```.  This ensures that the second node won't get started when a stop command is sent to the first node since the nodes will send a ```stopped``` message when forced to stop.
@@ -101,8 +101,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 - The second "Turn LEDs on" node accepts JSONata data like this:
 
-![](./images/call_service.png)
-![](./images/jsonata2.png)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/call_service.png?raw=true)
+![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/jsonata2.png?raw=true)
 
 
 ## **Changelog**
