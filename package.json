@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-light-transition",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Transitions a light's color & brightness based on defined settings.",
   "main": "light-transition.js",
   "scripts": {},

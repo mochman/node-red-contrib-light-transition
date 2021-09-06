@@ -11,6 +11,18 @@ module.exports = function (RED) {
   ]
 
   var CalcDuration = function (unit, duration) { return (unitMap.find(o => o.unit === unit).duration * duration); }
+  let readableDuration = function (duration) {
+    let maxSeconds = 90;
+    let maxMinutes = 60;
+    let seconds = parseInt(duration) / 1000;
+    if(seconds <= maxSeconds) {
+      return Math.round(seconds * 10) / 10 + " Second" + (seconds > 1 ? "s":"");
+    } else if(seconds/60 <= maxMinutes) {
+      return Math.round(seconds/6) / 10 + " Minute" + (seconds/60 > 1 ? "s":"");
+    } else {
+      return Math.round(seconds/360) / 10 + " Hour" + (seconds/3600 > 1 ? "s":"");
+    }
+  }
   var hexToRGB = function (hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [
@@ -34,6 +46,7 @@ module.exports = function (RED) {
     this.startBright = parseInt(n.startBright) || 1;
     this.endBright = parseInt(n.endBright) || 100;
     this.transitionType = n.transitionType || "Linear";
+    this.colorTransitionType = n.colorTransitionType || "Weighted";
 
     if (this.transitionTime <= 1) this.transitionTime = 1;
 
@@ -158,7 +171,17 @@ module.exports = function (RED) {
             return;
           }
         }
-      }
+
+        if (msg.transition.colorTransitionType != undefined) {
+          if ((msg.transition.colorTransitionType === "Weighted") || (msg.transition.colorTransitionType === "Half") || (msg.transition.colorTransitionType === "None")) {
+            node.colorTransitionType = msg.transition.colorTransitionType;
+          } else {
+            node.status({ fill: "red", shape: "ring", text: "Invalid attribbute msg.transition.colorTransitionType" });
+            node.error('Invalid Attribbute: msg.transition.colorTransitionType, allowed values are Weighted, Half or None');
+            return;
+          }
+        }
+      } // End Input Checking
 
       node.nodeduration = CalcDuration(node.transitionTimeUnits, node.transitionTime / node.steps);
       node.nodemaxtimeout = CalcDuration(node.transitionTimeUnits, node.transitionTime + 5);
@@ -170,7 +193,6 @@ module.exports = function (RED) {
       var deltas = [];
       var means = [];
       var changeDist = [];
-
 
       colors.push(hexToRGB(node.startRGB));
       colors.push(hexToRGB(node.transitionRGB));
@@ -226,7 +248,7 @@ module.exports = function (RED) {
             node.status({
               fill: "green",
               shape: "ring",
-              text: "running " + (data + 1) + "/" + node.steps,
+              text: "running " + (data + 1) + "/" + node.steps + " - Every " + readableDuration(node.nodeduration),
             });
             data++;
             timeout = setTimeout(function () {
@@ -257,13 +279,30 @@ module.exports = function (RED) {
                   node.status({});
                   if ((data * node.nodeduration) <= node.nodemaxtimeout) {
                     var colorChange = [];
-                    if (data <= tMid) {
-                      for (let i = 0; i < 3; i++) {
-                        colorChange[i] = colors[0][i] + data * d1[i];
+                    if(node.colorTransitionType == "Weighted") {
+                      if (data <= tMid) {
+                        for (let i = 0; i < 3; i++) {
+                          colorChange[i] = colors[0][i] + data * d1[i];
+                        }
+                      } else {
+                        for (let i = 0; i < 3; i++) {
+                          colorChange[i] = colors[1][i] + (data - tMid) * d2[i];
+                        }
+                      }
+                    } else if(node.colorTransitionType == "Half") {
+                      let midPt = Math.floor((node.steps-1) / 2);
+                      if(data <= midPt) {
+                        for(let i = 0; i < 3; i++) {
+                          colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt) * data;
+                        }
+                      } else {
+                        for(let i = 0; i < 3; i++) {
+                          colorChange[i] = colors[1][i] - Math.floor((colors[1][i] - colors[2][i]) / (node.steps - midPt)) * (data - midPt);
+                        }
                       }
                     } else {
-                      for (let i = 0; i < 3; i++) {
-                        colorChange[i] = colors[1][i] + (data - tMid) * d2[i];
+                      for(let i = 0; i < 3; i++) {
+                        colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[2][i])/node.steps) * data;
                       }
                     }
                     var miredChange = Math.floor((node.endMired - node.startMired) / (node.steps - 1) * data + node.startMired);

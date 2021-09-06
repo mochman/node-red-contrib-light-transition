@@ -36,33 +36,78 @@ This node can be configured manually or by passing it a specific payload.  The m
 - **Transition Style** - How the brightness changes over time.
   - **Linear** - Changes the brightness the same from beginning to end.
   - **Exponential** - Changes the brightess slowly at the begining then with bigger increments towards the end of the loop.
+- **Color Transition Style** - How the color changes over time.
+  - **Weighted** - Uses the ["redmean" distance approximation](https://en.wikipedia.org/wiki/Color_difference#sRGB) to determine the amount of change between the colors.  It adjusts the number of steps based on the difference in the change between the Start->Transition & Transition->End "distances".
+  - **Half & Half** - Just splits the number of total steps in half so the transition color will be in the middle.
+  - **None** - Disregards the transition color entirely and changes the color from Start->End.
 
 The node can also be configured by sending it a specific ```msg.transition``` object:
 ``` 
 {
-  "duration": 15,             //Total Time
-  "units": "Minute",          //Can be "Second", "Minute", or "Hour"
-  "steps": 30,                //# of steps
-  "startRGB": '#ff0000',      //RGB color to start from
-  "transitionRGB": '#ffff00', //RGB color to transition through
-  "endRGB": '#ffffff',        //RGB color to end at
-  "startMired": 160,          //Mired value to begin at
-  "endMired": 600,            //Mired value to end at
-  "startBright": 1,           //Starting brightness percentage
-  "endBright": 100,           //Ending brightness percentage
-  "transitionType": "Linear"  //Can be "Linear" or "Exponential"
+  "duration": 15,                     //Total Time
+  "units": "Minute",                  //Can be "Second", "Minute", or "Hour"
+  "steps": 30,                        //# of steps
+  "startRGB": '#ff0000',              //RGB color to start from
+  "transitionRGB": '#ffff00',         //RGB color to transition through
+  "endRGB": '#ffffff',                //RGB color to end at
+  "startMired": 160,                  //Mired value to begin at
+  "endMired": 600,                    //Mired value to end at
+  "startBright": 1,                   //Starting brightness percentage
+  "endBright": 100,                   //Ending brightness percentage
+  "transitionType": "Linear",         //Can be "Linear" or "Exponential"
+  "colorTransitionType" : "Weighted"  //Can be "Weighted", "Half", or "None"
 }
 ```
+### **Note:**  *Do not keep the comments in the actual msg.transition object, they are for reference only.*
+
+
 Any time a ```msg.transition``` is sent to the node, the settings are changed and the loop is started from the beginning again.
 
 This node will stop running when it has reached the last step.  It will send a ```msg.payload``` of ```complete``` out of the second output on the node.
 You can also manually stop the node by sending a ```msg.payload``` of ```stop``` or ```STOP```.  The node will end its loop and send a ```msg.payload``` of ```stopped``` out of the second output.
 
 ## **Notes**
-- The amount of steps this node takes to get from the starting RGB color to the transition color may not be the same as from the transition color to the final color.  This uses the ["redmean" distance approximation](https://en.wikipedia.org/wiki/Color_difference#sRGB) to find the "distance" between the color changes and scales the transition as appropriate.
+- If the "Weighted" color transition is changing colors too fast, try using the "Half & Half" transition type.
 - Using the "Exponential" transition type with a small number of "steps" will cause large brightness changes near the end.  It's best to use a higher number of steps to make sure the brightness transition is smooth.
 
+## **Examples**
+1. If you want to configure the node without using the node options, you can send it a ```msg.transition``` object:
+
+![](./images/configure_dynamic.png)
+
+  - *Here is the config for the Configuration Node:*
+
+![](./images/dynamic_settings.png)
+
+2. In this example, you have one light that has both color & white light, but doesn't let you send a ```rgbw_color``` value to it.
+
+![](./images/multiple_flow.png)
+
+- The first transition node changes the color from red to yellow / brightness 1 to 100%.
+
+![](./images/node_settings.png)
+
+- The first "Turn LEDs on" node accepts JSONata data like this:
+
+![](./images/call_service.png)
+![](./images/jsonata.png)
+
+
+ - The "Complete" switch node only passes a message when the ```msg.payload``` = ```complete```.  This ensures that the second node won't get started when a stop command is sent to the first node since the nodes will send a ```stopped``` message when forced to stop.
+
+ - The second transition node changes the mireds from 525(warm) to 160 (cool) / brightness 1 to 100%.
+
+![](./images/node_settings2.png)
+
+- The second "Turn LEDs on" node accepts JSONata data like this:
+
+![](./images/call_service.png)
+![](./images/jsonata2.png)
+
+
 ## **Changelog**
+v1.2.0 (6 Sep 21) - Added the ability to change the type of color transition.
+
 v1.1.0 (2 Sep 21) - Added color_temp(mired) transition & fixed linear brightness_pct formula.
 
 v1.0.1 (1 Sep 21) - Icon fix
