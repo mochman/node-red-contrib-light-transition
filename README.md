@@ -58,6 +58,9 @@ The node can also be configured by sending it a specific ```msg.transition``` ob
   "colorTransitionType" : "Weighted"  //Can be "Weighted", "Half", or "None"
 }
 ```
+### **Note:**  *Do not keep the comments in the actual msg.transition object, they are for reference only.*
+
+
 Any time a ```msg.transition``` is sent to the node, the settings are changed and the loop is started from the beginning again.
 
 This node will stop running when it has reached the last step.  It will send a ```msg.payload``` of ```complete``` out of the second output on the node.
@@ -66,6 +69,41 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 ## **Notes**
 - If the "Weighted" color transition is changing colors too fast, try using the "Half & Half" transition type.
 - Using the "Exponential" transition type with a small number of "steps" will cause large brightness changes near the end.  It's best to use a higher number of steps to make sure the brightness transition is smooth.
+
+## **Examples**
+1. If you want to configure the node without using the node options, you can send it a ```msg.transition``` object:
+
+![](./images/configure_dynamic.png)
+
+  - *Here is the config for the Configuration Node:*
+
+![](./images/dynamic_settings.png)
+
+2. In this example, you have one light that has both color & white light, but doesn't let you send a ```rgbw_color``` value to it.
+
+![](./images/multiple_flow.png)
+
+- The first transition node changes the color from red to yellow / brightness 1 to 100%.
+
+![](./images/node_settings.png)
+
+- The first "Turn LEDs on" node accepts JSONata data like this:
+
+![](./images/call_service.png)
+![](./images/jsonata.png)
+
+
+ - The "Complete" switch node only passes a message when the ```msg.payload``` = ```complete```.  This ensures that the second node won't get started when a stop command is sent to the first node since the nodes will send a ```stopped``` message when forced to stop.
+
+ - The second transition node changes the mireds from 525(warm) to 160 (cool) / brightness 1 to 100%.
+
+![](./images/node_settings2.png)
+
+- The second "Turn LEDs on" node accepts JSONata data like this:
+
+![](./images/call_service.png)
+![](./images/jsonata2.png)
+
 
 ## **Changelog**
 v1.2.0 (6 Sep 21) - Added the ability to change the type of color transition.
