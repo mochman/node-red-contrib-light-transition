@@ -35,7 +35,7 @@ This node can be configured manually or by passing it a specific payload.  The m
 - **Ending Brightness** - Final brightness ot the light.
 - **Brightness Type** - Select brightness scale.
   - **Percent** - Uses 1-100 for brightness input.
-  - **Integer** - Uses 0-255 for brightness input.
+  - **Integer** - Uses 1-255 for brightness input.
 - **Transition Style** - How the brightness changes over time.
   - **Linear** - Changes the brightness the same from beginning to end.
   - **Exponential** - Changes the brightess slowly at the begining then with bigger increments towards the end of the loop.
