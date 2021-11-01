@@ -45,6 +45,7 @@ module.exports = function (RED) {
     this.steps = parseInt(n.steps) || 30;
     this.startBright = parseInt(n.startBright) || 1;
     this.endBright = parseInt(n.endBright) || 100;
+    this.brightnessType = n.brightnessType || "Percent";
     this.transitionType = n.transitionType || "Linear";
     this.colorTransitionType = n.colorTransitionType || "Weighted";
 
@@ -67,7 +68,7 @@ module.exports = function (RED) {
             node.startRGB = msg.transition.startRGB;
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.startRGB must be formatted like #ffab13" });
-            node.error('Invalid Attribbute: msg.transition.startRGB, value must be formatted like #ffab13');
+            node.error('Invalid Attribute: msg.transition.startRGB, value must be formatted like #ffab13');
             return;
           }
         }
@@ -77,7 +78,7 @@ module.exports = function (RED) {
             node.transitionRGB = msg.transition.transitionRGB;
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.transitionRGB must be formatted like #ffab13" });
-            node.error('Invalid Attribbute: msg.transition.transitionRGB, value must be formatted like #ffab13');
+            node.error('Invalid Attribute: msg.transition.transitionRGB, value must be formatted like #ffab13');
             return;
           }
         }
@@ -87,7 +88,7 @@ module.exports = function (RED) {
             node.endRGB = msg.transition.endRGB;
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.endRGB must be formatted like #ffab13" });
-            node.error('Invalid Attribbute: msg.transition.endRGB, value must be formatted like #ffab13');
+            node.error('Invalid Attribute: msg.transition.endRGB, value must be formatted like #ffab13');
             return;
           }
         }
@@ -97,7 +98,7 @@ module.exports = function (RED) {
             node.startMired = parseInt(msg.transition.startMired);
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.startMired must be a positive integer" });
-            node.error('Invalid Attribbute: msg.transition.startMired, value must be a positive integer');
+            node.error('Invalid Attribute: msg.transition.startMired, value must be a positive integer');
             return;
           }
         }
@@ -107,7 +108,7 @@ module.exports = function (RED) {
             node.endMired = parseInt(msg.transition.endMired);
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.endMired must be a positive integer" });
-            node.error('Invalid Attribbute: msg.transition.endMired, value must be a positive integer');
+            node.error('Invalid Attribute: msg.transition.endMired, value must be a positive integer');
             return;
           }
         }
@@ -117,7 +118,7 @@ module.exports = function (RED) {
             node.transitionTime = parseInt(msg.transition.duration);
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.duration must be a positive integer" });
-            node.error('Invalid Attribbute: msg.transition.duration, value must be a positive integer');
+            node.error('Invalid Attribute: msg.transition.duration, value must be a positive integer');
             return;
           }
         }
@@ -127,27 +128,27 @@ module.exports = function (RED) {
             node.steps = parseInt(msg.transition.steps);
           } else {
             node.status({ fill: "red", shape: "ring", text: "msg.transition.steps must be a positive integer" });
-            node.error('Invalid Attribbute: msg.transition.steps, value must be a positive integer');
+            node.error('Invalid Attribute: msg.transition.steps, value must be a positive integer');
             return;
           }
         }
 
         if (msg.transition.startBright != undefined) {
-          if (typeof msg.transition.startBright === 'number' && msg.transition.startBright > 0 && msg.transition.startBright <= 100) {
+          if (typeof msg.transition.startBright === 'number' && msg.transition.startBright > 0 && msg.transition.startBright <= 255) {
             node.startBright = parseInt(msg.transition.startBright);
           } else {
-            node.status({ fill: "red", shape: "ring", text: "msg.transition.startBright must be between 1 and 100" });
-            node.error('Invalid Attribbute: msg.transition.startBright, value must be between 1 and 100');
+            node.status({ fill: "red", shape: "ring", text: "msg.transition.startBright must be between 1 and 255" });
+            node.error('Invalid Attribute: msg.transition.startBright, value must be between 1 and 255');
             return;
           }
         }
 
         if (msg.transition.endBright != undefined) {
-          if (typeof msg.transition.endBright === 'number' && msg.transition.endBright > 0 && msg.transition.endBright <= 100) {
+          if (typeof msg.transition.endBright === 'number' && msg.transition.endBright > 0 && msg.transition.endBright <= 255) {
             node.endBright = parseInt(msg.transition.endBright);
           } else {
-            node.status({ fill: "red", shape: "ring", text: "msg.transition.endBright must be between 1 and 100" });
-            node.error('Invalid Attribbute: msg.transition.endBright, value must be between 1 and 100');
+            node.status({ fill: "red", shape: "ring", text: "msg.transition.endBright must be between 1 and 255" });
+            node.error('Invalid Attribute: msg.transition.endBright, value must be between 1 and 255');
             return;
           }
         }
@@ -156,8 +157,18 @@ module.exports = function (RED) {
           if ((msg.transition.units === "Second") || (msg.transition.units === "Minute") || (msg.transition.units === "Hour")) {
             node.transitionUnits = parseInt(msg.transition.units);
           } else {
-            node.status({ fill: "red", shape: "ring", text: "Invalid attribbute msg.transition.units" });
-            node.error('Invalid Attribbute: msg.transition.units, allowed values are Second, Minute, and Hour');
+            node.status({ fill: "red", shape: "ring", text: "Invalid attribute msg.transition.units" });
+            node.error('Invalid Attribute: msg.transition.units, allowed values are Second, Minute, and Hour');
+            return;
+          }
+        }
+
+        if (msg.transition.brightnessType != undefined) {
+          if ((msg.transition.brightnessType === "Percent") || (msg.transition.brightnessType === "Integer")) {
+            node.brightnessType = msg.transition.brightnessType;
+          } else {
+            node.status({ fill: "red", shape: "ring", text: "Invalid attribute msg.transition.brightnessType" });
+            node.error('Invalid Attribute: msg.transition.brightnessType, allowed values are Percent or Integer');
             return;
           }
         }
@@ -166,8 +177,8 @@ module.exports = function (RED) {
           if ((msg.transition.transitionType === "Linear") || (msg.transition.transitionType === "Exponential")) {
             node.transitionType = msg.transition.transitionType;
           } else {
-            node.status({ fill: "red", shape: "ring", text: "Invalid attribbute msg.transition.transitionType" });
-            node.error('Invalid Attribbute: msg.transition.transitionType, allowed values are Linear or Exponential');
+            node.status({ fill: "red", shape: "ring", text: "Invalid attribute msg.transition.transitionType" });
+            node.error('Invalid Attribute: msg.transition.transitionType, allowed values are Linear or Exponential');
             return;
           }
         }
@@ -176,8 +187,8 @@ module.exports = function (RED) {
           if ((msg.transition.colorTransitionType === "Weighted") || (msg.transition.colorTransitionType === "Half") || (msg.transition.colorTransitionType === "None")) {
             node.colorTransitionType = msg.transition.colorTransitionType;
           } else {
-            node.status({ fill: "red", shape: "ring", text: "Invalid attribbute msg.transition.colorTransitionType" });
-            node.error('Invalid Attribbute: msg.transition.colorTransitionType, allowed values are Weighted, Half or None');
+            node.status({ fill: "red", shape: "ring", text: "Invalid attribute msg.transition.colorTransitionType" });
+            node.error('Invalid Attribute: msg.transition.colorTransitionType, allowed values are Weighted, Half or None');
             return;
           }
         }
@@ -188,6 +199,17 @@ module.exports = function (RED) {
 
       transition.setTimeout(node.nodemaxtimeout);
       transition.setMaxLoop(node.steps - 1);
+
+      switch(node.brightnessType) {
+        case "Percent":
+          if(node.startBright > 100) node.startBright = 100;
+          if(node.endBright > 100) node.endBright = 100;
+          break;
+        case "Integer":
+          node.startBright = Math.round((node.startBright - 1) * 99 / 254 + 1);
+          node.endBright = Math.round((node.endBright - 1) * 99 / 254 + 1);
+          break;
+      }
 
       var colors = [];
       var deltas = [];

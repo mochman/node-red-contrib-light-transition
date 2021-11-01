@@ -33,6 +33,9 @@ This node can be configured manually or by passing it a specific payload.  The m
 - **Ending mireds** - The final mired value.
 - **Starting Brightness** - Initial brightness of the light.
 - **Ending Brightness** - Final brightness ot the light.
+- **Brightness Type** - Select brightness scale.
+  - **Percent** - Uses 1-100 for brightness input.
+  - **Integer** - Uses 1-255 for brightness input.
 - **Transition Style** - How the brightness changes over time.
   - **Linear** - Changes the brightness the same from beginning to end.
   - **Exponential** - Changes the brightess slowly at the begining then with bigger increments towards the end of the loop.
@@ -52,8 +55,9 @@ The node can also be configured by sending it a specific ```msg.transition``` ob
   "endRGB": '#ffffff',                //RGB color to end at
   "startMired": 160,                  //Mired value to begin at
   "endMired": 600,                    //Mired value to end at
-  "startBright": 1,                   //Starting brightness percentage
-  "endBright": 100,                   //Ending brightness percentage
+  "startBright": 1,                   //Starting brightness
+  "endBright": 100,                   //Ending brightness
+  "brightnessType": "Percent",        //Brightness values selector.  Can be "Percent" or "Integer"
   "transitionType": "Linear",         //Can be "Linear" or "Exponential"
   "colorTransitionType" : "Weighted"  //Can be "Weighted", "Half", or "None"
 }
@@ -106,6 +110,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 
 ## **Changelog**
+v1.3.0 (1 Nov 21) - Added brightnessType.  Can now select between brightness percent and a brightness integer value for input only.
+
 v1.2.1 (6 Sep 21) - Changed Image path in README
 
 v1.2.0 (6 Sep 21) - Added the ability to change the type of color transition.
