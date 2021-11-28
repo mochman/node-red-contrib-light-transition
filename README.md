@@ -12,6 +12,7 @@ This node was created to help with lights in Home Assistant that don't work with
 ``` 
 {
   "brightness_pct": <1-100>,
+  "brightness": <1-255>,
   "rgb_color": [<0-255>,<0-255>,<0-255>],
   "color_temp": <Integer>
 }
@@ -110,6 +111,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 
 ## **Changelog**
+v1.4.0 (28 Nov 21) - Added brightness to outputs.
+
 v1.3.1 (28 Nov 21) - Fixed brightness integer input max value.
 
 v1.3.0 (1 Nov 21) - Added brightnessType.  Can now select between brightness percent and a brightness integer value for input only.

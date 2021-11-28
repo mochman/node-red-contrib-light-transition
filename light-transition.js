@@ -199,6 +199,8 @@ module.exports = function (RED) {
 
       transition.setTimeout(node.nodemaxtimeout);
       transition.setMaxLoop(node.steps - 1);
+      if(node.startBright <= 0) node.startBright = 1;
+      if(node.endBright <= 0) node.endBright = 1;
 
       switch(node.brightnessType) {
         case "Percent":
@@ -262,6 +264,7 @@ module.exports = function (RED) {
           var lightMsg = {
             payload: {
               brightness_pct: node.startBright,
+              brightness: Math.ceil(1 + 254 * (node.startBright - 1) / 99),
               rgb_color: colors[0],
               color_temp: node.startMired,
             }
@@ -281,6 +284,7 @@ module.exports = function (RED) {
                   var lightMsg = {
                     payload: {
                       brightness_pct: node.endBright,
+                      brightness: Math.ceil(1 + 254 * (node.endBright - 1) / 99),
                       rgb_color: colors[2],
                       color_temp: node.endMired,
                     }
@@ -343,6 +347,7 @@ module.exports = function (RED) {
                     var lightMsg = {
                       payload: {
                         brightness_pct: brightnessChange,
+                        brightness: Math.ceil(1 + 254 * (brightnessChange - 1) / 99),
                         rgb_color: colorChange,
                         color_temp: miredChange,
                       }

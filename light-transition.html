@@ -102,7 +102,7 @@
 </script>
 
 <script type="text/x-red" data-help-name="light-transition">
-		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
+		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.brightness</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
 	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
 	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.
 	<p>Properties can be overridden via <code>msg.transition</code> messages supplemented with property name.</p>
