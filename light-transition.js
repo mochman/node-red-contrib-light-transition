@@ -206,6 +206,8 @@ module.exports = function (RED) {
           if(node.endBright > 100) node.endBright = 100;
           break;
         case "Integer":
+          if(node.startBright > 255) node.startBright = 255;
+          if(node.endBright > 255) node.endBright = 255;
           node.startBright = Math.round((node.startBright - 1) * 99 / 254 + 1);
           node.endBright = Math.round((node.endBright - 1) * 99 / 254 + 1);
           break;

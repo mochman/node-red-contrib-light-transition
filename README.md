@@ -110,6 +110,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 
 ## **Changelog**
+v1.3.1 (28 Nov 21) - Fixed brightness integer input max value.
+
 v1.3.0 (1 Nov 21) - Added brightnessType.  Can now select between brightness percent and a brightness integer value for input only.
 
 v1.2.1 (6 Sep 21) - Changed Image path in README
