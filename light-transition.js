@@ -320,8 +320,12 @@ module.exports = function (RED) {
                     } else if(node.colorTransitionType == "Half") {
                       let midPt = Math.floor((node.steps-1) / 2);
                       if(data <= midPt) {
-                        for(let i = 0; i < 3; i++) {
-                          colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt) * data;
+                        if(data == midPt) {
+                          colorChange = hexToRGB(node.transitionRGB);
+                        } else {
+                          for(let i = 0; i < 3; i++) {
+                            colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt) * data;
+                          }
                         }
                       } else {
                         for(let i = 0; i < 3; i++) {
