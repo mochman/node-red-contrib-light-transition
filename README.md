@@ -111,6 +111,8 @@ You can also manually stop the node by sending a ```msg.payload``` of ```stop```
 
 
 ## **Changelog**
+v1.4.2 (29 Dec 21) - Fixed isse where values wouldn't be reset after STOP command sent.
+
 v1.4.1 (29 Nov 21) - Fixed issue where RGB value could be above 255 when using Half & Half mode.
 
 v1.4.0 (28 Nov 21) - Added brightness to outputs.

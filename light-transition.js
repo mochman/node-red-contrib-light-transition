@@ -33,24 +33,6 @@ module.exports = function (RED) {
   }
   function LightTransition(n) {
     RED.nodes.createNode(this, n);
-    this.nodeduration = n.nodeduration || 1;
-    this.nodemaxtimeout = n.nodemaxtimeout || 1;
-    this.startRGB = n.startRGB || "#ff0000";
-    this.transitionRGB = n.transitionRGB || this.startRGB;
-    this.endRGB = n.endRGB || "#ffffff";
-    this.startMired = parseInt(n.startMired) || 200;
-    this.endMired = parseInt(n.endMired) || 600;
-    this.transitionTime = parseInt(n.transitionTime) || 15;
-    this.transitionTimeUnits = n.transitionTimeUnits || "Minute";
-    this.steps = parseInt(n.steps) || 30;
-    this.startBright = parseInt(n.startBright) || 1;
-    this.endBright = parseInt(n.endBright) || 100;
-    this.brightnessType = n.brightnessType || "Percent";
-    this.transitionType = n.transitionType || "Linear";
-    this.colorTransitionType = n.colorTransitionType || "Weighted";
-
-    if (this.transitionTime <= 1) this.transitionTime = 1;
-
     var node = this;
     var transition = null;
     var timeout = null;
@@ -61,6 +43,23 @@ module.exports = function (RED) {
 
     this.on("input", function (msg) {
       transition = Looper();
+      this.nodeduration = n.nodeduration || 1;
+      this.nodemaxtimeout = n.nodemaxtimeout || 1;
+      this.startRGB = n.startRGB || "#ff0000";
+      this.transitionRGB = n.transitionRGB || this.startRGB;
+      this.endRGB = n.endRGB || "#ffffff";
+      this.startMired = parseInt(n.startMired) || 200;
+      this.endMired = parseInt(n.endMired) || 600;
+      this.transitionTime = parseInt(n.transitionTime) || 15;
+      this.transitionTimeUnits = n.transitionTimeUnits || "Minute";
+      this.steps = parseInt(n.steps) || 30;
+      this.startBright = parseInt(n.startBright) || 1;
+      this.endBright = parseInt(n.endBright) || 100;
+      this.brightnessType = n.brightnessType || "Percent";
+      this.transitionType = n.transitionType || "Linear";
+      this.colorTransitionType = n.colorTransitionType || "Weighted";
+      if (this.transitionTime <= 1) this.transitionTime = 1;
+
       if (msg.transition != undefined) {
 
         if (msg.transition.startRGB != undefined) {
