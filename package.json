@@ -13,9 +13,13 @@
     "wakeup"
   ],
   "node-red": {
+    "version": ">=2.2.0",
     "nodes": {
       "light-transition": "light-transition.js"
     }
+  },
+  "engines": {
+    "node": ">=16.13.2"
   },
   "dependencies": {
     "loop": "2.1.2"
