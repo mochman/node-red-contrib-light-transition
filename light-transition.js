@@ -323,12 +323,13 @@ module.exports = function (RED) {
                           colorChange = hexToRGB(node.transitionRGB);
                         } else {
                           for(let i = 0; i < 3; i++) {
-                            colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt) * data;
+                            colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt * data);
                           }
                         }
                       } else {
+
                         for(let i = 0; i < 3; i++) {
-                          colorChange[i] = colors[1][i] - Math.floor((colors[1][i] - colors[2][i]) / (node.steps - midPt)) * (data - midPt);
+                          colorChange[i] = colors[1][i] - Math.floor((colors[1][i] - colors[2][i]) / (node.steps - midPt - 1) * (data - midPt));
                         }
                       }
                     } else {
