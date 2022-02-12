@@ -1,0 +1,103 @@
+[
+  {
+      "id": "e0c34559cc18c6e4",
+      "type": "light-transition",
+      "z": "0e7b341a41a0addc",
+      "name": "",
+      "startRGB": "#ff0000",
+      "transitionRGB": "#ffc864",
+      "endRGB": "#ffffff",
+      "startMired": "",
+      "endMired": "",
+      "transitionTime": "15",
+      "transitionTimeUnits": "Minute",
+      "steps": "150",
+      "startBright": "1",
+      "endBright": "100",
+      "brightnessType": "Percent",
+      "transitionType": "Exponential",
+      "colorTransitionType": "Weighted",
+      "x": 620,
+      "y": 320,
+      "wires": [
+          [
+              "1faaf4b497821831"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "e8d18d86aebcd193",
+      "type": "inject",
+      "z": "0e7b341a41a0addc",
+      "name": "Start Timer",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 380,
+      "y": 280,
+      "wires": [
+          [
+              "e0c34559cc18c6e4"
+          ]
+      ]
+  },
+  {
+      "id": "1faaf4b497821831",
+      "type": "debug",
+      "z": "0e7b341a41a0addc",
+      "name": "",
+      "active": true,
+      "tosidebar": true,
+      "console": false,
+      "tostatus": false,
+      "complete": "false",
+      "statusVal": "",
+      "statusType": "auto",
+      "x": 870,
+      "y": 320,
+      "wires": []
+  },
+  {
+      "id": "a035931dfe3f30b9",
+      "type": "inject",
+      "z": "0e7b341a41a0addc",
+      "name": "Stop Timer",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "STOP",
+      "payloadType": "str",
+      "x": 380,
+      "y": 380,
+      "wires": [
+          [
+              "e0c34559cc18c6e4"
+          ]
+      ]
+  }
+]
