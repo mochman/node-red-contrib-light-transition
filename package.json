@@ -18,9 +18,6 @@
       "light-transition": "light-transition.js"
     }
   },
-  "engines": {
-    "node": ">=12.0.0"
-  },
   "dependencies": {
     "loop": "2.1.2"
   },
@@ -34,5 +31,8 @@
     "url": "git+https://www.github.com/mochman/node-red-contrib-light-transition.git"
   },
   "bugs": "https://www.github.com/mochman/node-red-contrib-light-transition/issues",
-  "homepage": "https://www.github.com/mochman/node-red-contrib-light-transition"
+  "homepage": "https://www.github.com/mochman/node-red-contrib-light-transition",
+  "engines": {
+    "node": ">=12.0.0"
+  }
 }
