@@ -53,8 +53,8 @@ module.exports = function (RED) {
       this.transitionTime = parseInt(n.transitionTime) || 15;
       this.transitionTimeUnits = n.transitionTimeUnits || "Minute";
       this.steps = parseInt(n.steps) || 30;
-      this.startBright = parseInt(n.startBright) || 1;
-      this.endBright = parseInt(n.endBright) || 100;
+      this.startBright = parseInt(n.startBright) || 0;
+      this.endBright = parseInt(n.endBright) || 0;
       this.brightnessType = n.brightnessType || "Percent";
       this.transitionType = n.transitionType || "Linear";
       this.colorTransitionType = n.colorTransitionType || "Weighted";
@@ -133,21 +133,21 @@ module.exports = function (RED) {
         }
 
         if (msg.transition.startBright != undefined) {
-          if (typeof msg.transition.startBright === 'number' && msg.transition.startBright > 0 && msg.transition.startBright <= 255) {
+          if (typeof msg.transition.startBright === 'number' && msg.transition.startBright >= 0 && msg.transition.startBright <= 255) {
             node.startBright = parseInt(msg.transition.startBright);
           } else {
-            node.status({ fill: "red", shape: "ring", text: "msg.transition.startBright must be between 1 and 255" });
-            node.error('Invalid Attribute: msg.transition.startBright, value must be between 1 and 255');
+            node.status({ fill: "red", shape: "ring", text: "msg.transition.startBright must be between 0 and 255" });
+            node.error('Invalid Attribute: msg.transition.startBright, value must be between 0 and 255');
             return;
           }
         }
 
         if (msg.transition.endBright != undefined) {
-          if (typeof msg.transition.endBright === 'number' && msg.transition.endBright > 0 && msg.transition.endBright <= 255) {
+          if (typeof msg.transition.endBright === 'number' && msg.transition.endBright >= 0 && msg.transition.endBright <= 255) {
             node.endBright = parseInt(msg.transition.endBright);
           } else {
-            node.status({ fill: "red", shape: "ring", text: "msg.transition.endBright must be between 1 and 255" });
-            node.error('Invalid Attribute: msg.transition.endBright, value must be between 1 and 255');
+            node.status({ fill: "red", shape: "ring", text: "msg.transition.endBright must be between 0 and 255" });
+            node.error('Invalid Attribute: msg.transition.endBright, value must be between 0 and 255');
             return;
           }
         }
@@ -198,8 +198,8 @@ module.exports = function (RED) {
 
       transition.setTimeout(node.nodemaxtimeout);
       transition.setMaxLoop(node.steps - 1);
-      if(node.startBright <= 0) node.startBright = 1;
-      if(node.endBright <= 0) node.endBright = 1;
+      if(node.startBright < 0) node.startBright = 0;
+      if(node.endBright < 0) node.endBright = 0;
 
       switch(node.brightnessType) {
         case "Percent":
@@ -209,8 +209,8 @@ module.exports = function (RED) {
         case "Integer":
           if(node.startBright > 255) node.startBright = 255;
           if(node.endBright > 255) node.endBright = 255;
-          node.startBright = Math.round((node.startBright - 1) * 99 / 254 + 1);
-          node.endBright = Math.round((node.endBright - 1) * 99 / 254 + 1);
+          if(node.startBright != 0) node.startBright = Math.round((node.startBright - 1) * 99 / 254 + 1);
+          if(node.endBright != 0) node.endBright = Math.round((node.endBright - 1) * 99 / 254 + 1);
           break;
       }
 
@@ -263,7 +263,7 @@ module.exports = function (RED) {
           var lightMsg = {
             payload: {
               brightness_pct: node.startBright,
-              brightness: Math.ceil(1 + 254 * (node.startBright - 1) / 99),
+              brightness: node.startBright == 0 ? 0 : Math.ceil(1 + 254 * (node.startBright - 1) / 99),
               rgb_color: colors[0],
               color_temp: node.startMired,
             }
@@ -283,7 +283,7 @@ module.exports = function (RED) {
                   var lightMsg = {
                     payload: {
                       brightness_pct: node.endBright,
-                      brightness: Math.ceil(1 + 254 * (node.endBright - 1) / 99),
+                      brightness: node.endBright == 0 ? 0 : Math.ceil(1 + 254 * (node.endBright - 1) / 99),
                       rgb_color: colors[2],
                       color_temp: node.endMired,
                     }
@@ -351,7 +351,7 @@ module.exports = function (RED) {
                     var lightMsg = {
                       payload: {
                         brightness_pct: brightnessChange,
-                        brightness: Math.ceil(1 + 254 * (brightnessChange - 1) / 99),
+                        brightness: Math.ceil(1 + 254 * (brightnessChange - 1) / 99) <= 0 ? 1 : Math.ceil(1 + 254 * (brightnessChange - 1) / 99),
                         rgb_color: colorChange,
                         color_temp: miredChange,
                       }
