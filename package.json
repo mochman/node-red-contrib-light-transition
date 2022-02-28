@@ -1,34 +1,44 @@
 {
-  "name": "node-red-contrib-light-transition",
-  "version": "1.4.0",
-  "description": "Transitions a light's color & brightness based on defined settings.",
-  "main": "light-transition.js",
-  "scripts": {},
-  "keywords": [
-    "node-red",
-    "light",
-    "transition",
-    "dimmer",
-    "sunrise",
-    "wakeup"
-  ],
-  "node-red": {
-    "nodes": {
-      "light-transition": "light-transition.js"
-    }
-  },
-  "dependencies": {
-    "loop": "2.1.2"
-  },
-  "author": {
-    "name": "Luke Moch",
-    "url": "https://www.github.com/mochman/"
-  },
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://www.github.com/mochman/node-red-contrib-light-transition.git"
-  },
-  "bugs": "https://www.github.com/mochman/node-red-contrib-light-transition/issues",
-  "homepage": "https://www.github.com/mochman/node-red-contrib-light-transition"
+	"name": "node-red-contrib-light-transition",
+	"version": "1.5.0",
+	"description": "Transitions a light's color & brightness based on defined settings.",
+	"main": "light-transition.js",
+	"scripts": {
+		"validate": "node-red-dev validate -o validation_result.json"
+	},
+	"keywords": [
+		"node-red",
+		"light",
+		"transition",
+		"dimmer",
+		"sunrise",
+		"wakeup"
+	],
+	"node-red": {
+		"version": ">=2.0.0",
+		"nodes": {
+			"light-transition": "light-transition.js"
+		}
+	},
+	"dependencies": {
+		"loop": "2.1.2"
+	},
+	"devDependencies": {
+		"prettier": "2.5.1"
+	},
+	"author": {
+		"name": "Luke Moch",
+		"url": "https://www.github.com/mochman/"
+	},
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://www.github.com/mochman/node-red-contrib-light-transition.git"
+	},
+	"bugs": "https://www.github.com/mochman/node-red-contrib-light-transition/issues",
+	"homepage": "https://www.github.com/mochman/node-red-contrib-light-transition",
+	"engines": {
+		"node": ">=12",
+		"npm": ">=6.9"
+	}
 }
