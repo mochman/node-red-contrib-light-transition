@@ -154,7 +154,7 @@ module.exports = function (RED) {
 
         if (msg.transition.units != undefined) {
           if ((msg.transition.units === "Second") || (msg.transition.units === "Minute") || (msg.transition.units === "Hour")) {
-            node.transitionUnits = parseInt(msg.transition.units);
+            node.transitionTimeUnits = msg.transition.units;
           } else {
             node.status({ fill: "red", shape: "ring", text: "Invalid attribute msg.transition.units" });
             node.error('Invalid Attribute: msg.transition.units, allowed values are Second, Minute, and Hour');
