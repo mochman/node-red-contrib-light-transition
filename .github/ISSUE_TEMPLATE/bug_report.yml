@@ -58,7 +58,7 @@ body:
       required: true
 
   - type: textarea
-    id: node setup
+    id: node-setup
     attributes:
       label: JSON of node setup
       description: If you want to paste your setup to help with troubleshooting, do so here.
