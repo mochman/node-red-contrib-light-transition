@@ -4,7 +4,8 @@
 	"description": "Transitions a light's color & brightness based on defined settings.",
 	"main": "light-transition.js",
 	"scripts": {
-		"validate": "node-red-dev validate -o validation_result.json"
+		"validate": "node-red-dev validate -o validation_result.json",
+		"test": "mocha \"test/**/*_spec.js\""
 	},
 	"keywords": [
 		"node-red",
@@ -24,6 +25,8 @@
 		"loop": "2.1.2"
 	},
 	"devDependencies": {
+		"mocha": "^9.2.1",
+		"node-red-node-test-helper": "^0.1.8",
 		"prettier": "2.5.1"
 	},
 	"author": {
