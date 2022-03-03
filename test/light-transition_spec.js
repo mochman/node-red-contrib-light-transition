@@ -40,7 +40,7 @@ let trys = [
 			},
 		},
 		{
-			brightness: 89,
+			brightness: 90,
 			brightness_pct: 35,
 			color_temp: 423,
 			rgb_color: [255, 0, 0],
@@ -70,7 +70,7 @@ let trys = [
 			rgb_color: [18, 52, 86],
 		},
 		{
-			brightness: 35,
+			brightness: 36,
 			brightness_pct: 14,
 			color_temp: 600,
 			rgb_color: [250, 0, 36],
@@ -104,7 +104,7 @@ describe('light-transition Node', function () {
 
 	it('No inputs', function (done) {
 		let noInp = {
-			brightness: 1,
+			brightness: 3,
 			brightness_pct: 1,
 			color_temp: 200,
 			rgb_color: [255, 0, 0],
