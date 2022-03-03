@@ -1,5 +1,3 @@
-const { array } = require('yargs');
-
 module.exports = function (RED) {
   let Looper = require('loop');
 
