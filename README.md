@@ -117,6 +117,8 @@ You can also manually stop the node by sending a `msg.payload` of `stop` or `STO
 
 ## **Changelog**
 
+v1.5.1 (3 Mar 22) - Refactored code
+
 v1.5.0 (28 Feb 22) - Able to set 0 as starting or ending brightness.
 
 v1.4.6 (28 Feb 22) - Fixed issue where sending any change to 'units' wouldn't be used.
