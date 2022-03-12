@@ -262,17 +262,18 @@ module.exports = function (RED) {
           stopped = true;
           stopmsg = RED.util.cloneMessage(msg);
           stopmsg.payload = 'stopped';
+          delete stopmsg['_timerpass'];
           node.send([null, stopmsg]);
           stopped = false;
         } else {
-          let lightMsg = {
-            payload: {
+          let lightMsg = RED.util.cloneMessage(msg);
+          delete lightMsg['_timerpass'];
+          lightMsg.payload = {
               brightness_pct: node.startBright,
               brightness: scale(node.startBright),
               rgb_color: colors[0],
               color_temp: node.startMired,
-            }
-          }
+            };
           node.send([lightMsg, null]);
           msg._timerpass = true;
           transition.run(function (next, err, data) {
@@ -281,16 +282,17 @@ module.exports = function (RED) {
             timeout = setTimeout(function () {
               if (stopped === false) {
                 if (data == node.steps - 1) {
-                  let lightMsg = {
-                    payload: {
+                  let lightMsg = RED.util.cloneMessage(msg);
+                  delete lightMsg['_timerpass'];
+                    lightMsg.payload = {
                       brightness_pct: node.endBright,
                       brightness: scale(node.endBright),
                       rgb_color: colors[2],
                       color_temp: node.endMired,
-                    }
-                  }
+                    };
                   mlmsg = RED.util.cloneMessage(msg);
                   mlmsg.payload = 'complete';
+                  delete mlmsg['_timerpass'];
                   node.send([lightMsg, mlmsg]);
                   let now = new Date;
                   let splitDate = now.toDateString().split(' ');
@@ -331,14 +333,14 @@ module.exports = function (RED) {
                         brightnessChange = Math.floor((node.endBright - node.startBright) / (node.steps - 1) * data + node.startBright);
                         break;
                     }
-                    let lightMsg = {
-                      payload: {
+                    let lightMsg = RED.util.cloneMessage(msg);
+                    delete lightMsg['_timerpass'];
+                      lightMsg.payload = {
                         brightness_pct: brightnessChange,
                         brightness: scale(brightnessChange),
                         rgb_color: colorChange,
                         color_temp: miredChange,
-                      }
-                    };
+                      };
                     node.send([lightMsg, null]);
                     timeout = null;
                     if (((data + 1) * node.nodeduration) > node.nodemaxtimeout) {
