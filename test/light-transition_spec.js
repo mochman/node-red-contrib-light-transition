@@ -163,7 +163,7 @@ describe('light-transition Node', function () {
 		});
 	});
 
-	/*for (let i = 0; i < trys.length; i++) {
+	for (let i = 0; i < trys.length; i++) {
 		it(`msg.payload with forced input ${i + 1}`, function (done) {
 			let forcedInp = trys[i][1];
 			let msg = trys[i][0];
@@ -182,13 +182,13 @@ describe('light-transition Node', function () {
 				n1.receive(stpMsg);
 			});
 		});
-	}*/
+	}
 
 	for (let i = 0; i < trys.length; i++) {
 		it(`msg.payload check last output ${i + 1}`, function (done) {
 			let endMsg = trys[i][2];
 			let sndMsg = trys[i][0];
-			this.timeout(5000);
+			this.timeout(6000);
 			let count = 0;
 			helper.load(lightNode, startingFlow, function () {
 				let n1 = helper.getNode('n1');
@@ -198,7 +198,9 @@ describe('light-transition Node', function () {
 						count++;
 						if (count === numSteps) {
 							msg.should.have.property('payload', endMsg);
-							done();
+							setTimeout(function () {
+								done();
+							}, 1000);
 						}
 					} catch (err) {
 						done(err);
