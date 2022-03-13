@@ -14,7 +14,7 @@ let startingFlow = [
 		endRGB: '#ffffff',
 		startMired: '',
 		endMired: '',
-		transitionTime: 5,
+		transitionTime: 3,
 		transitionTimeUnits: 'Second',
 		steps: 1,
 		startBright: 1,
