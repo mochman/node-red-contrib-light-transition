@@ -1,5 +1,5 @@
 # Light Transition for node-red
-
+[![Node-Red Tests](https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml/badge.svg)](https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml)
 ---
 
 ## **Overview:**
