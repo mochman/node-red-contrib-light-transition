@@ -196,6 +196,7 @@ describe('light-transition Node', function () {
 				n2.on('input', (msg) => {
 					try {
 						count++;
+						console.log(count);
 						if (count === numSteps) {
 							msg.should.have.property('payload', endMsg);
 							done();
