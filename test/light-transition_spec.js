@@ -93,7 +93,7 @@ describe('light-transition Node', function () {
 		helper.unload();
 	});
 
-	it('should be loaded', function (done) {
+	it('Can be loaded', function (done) {
 		let flow = [{ id: 'n1', type: 'light-transition', name: 'test name' }];
 		helper.load(lightNode, flow, function () {
 			let n1 = helper.getNode('n1');
@@ -102,7 +102,26 @@ describe('light-transition Node', function () {
 		});
 	});
 
-	it('No inputs', function (done) {
+	it('Can be stopped', function (done) {
+		helper.load(lightNode, startingFlow, function () {
+			let n1 = helper.getNode('n1');
+			let n3 = helper.getNode('n3');
+			n3.on('input', function (msg) {
+				try {
+					msg.should.have.property('payload', 'stopped');
+					done();
+				} catch (err) {
+					done(err);
+				}
+			});
+			n1.receive({ payload: 'start' });
+			setTimeout(() => {
+				n1.receive(stpMsg);
+			}, 1000);
+		});
+	});
+
+	it('msg.payload with no forced inputs', function (done) {
 		let noInp = {
 			brightness: 3,
 			brightness_pct: 1,
@@ -126,27 +145,26 @@ describe('light-transition Node', function () {
 		});
 	});
 
-	it('Can be stopped', function (done) {
+	it('msg.topic pass through', function (done) {
+		let testTopic = { key1: 'key1', key2: [1, 2, 3] };
 		helper.load(lightNode, startingFlow, function () {
+			let n2 = helper.getNode('n2');
 			let n1 = helper.getNode('n1');
-			let n3 = helper.getNode('n3');
-			n3.on('input', function (msg) {
+			n2.on('input', function (msg) {
 				try {
-					msg.should.have.property('payload', 'stopped');
+					msg.should.have.property('topic', testTopic);
 					done();
 				} catch (err) {
 					done(err);
 				}
 			});
-			n1.receive({ payload: 'start' });
-			setTimeout(() => {
-				n1.receive(stpMsg);
-			}, 1000);
+			n1.receive({ payload: 'start', topic: testTopic });
+			n1.receive(stpMsg);
 		});
 	});
 
 	for (let i = 0; i < trys.length; i++) {
-		it(`Forced inputs ${i + 1}`, function (done) {
+		it(`msg.payload with forced input ${i + 1}`, function (done) {
 			let forcedInp = trys[i][1];
 			let msg = trys[i][0];
 			helper.load(lightNode, startingFlow, function () {
@@ -167,7 +185,7 @@ describe('light-transition Node', function () {
 	}
 
 	for (let i = 0; i < trys.length; i++) {
-		it(`Final output ${i + 1}`, function (done) {
+		it(`msg.payload check last output ${i + 1}`, function (done) {
 			let endMsg = trys[i][2];
 			let sndMsg = trys[i][0];
 			this.timeout(5000);
