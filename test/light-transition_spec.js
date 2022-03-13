@@ -14,7 +14,7 @@ let startingFlow = [
 		endRGB: '#ffffff',
 		startMired: '',
 		endMired: '',
-		transitionTime: 3,
+		transitionTime: 5,
 		transitionTimeUnits: 'Second',
 		steps: 1,
 		startBright: 1,
@@ -199,6 +199,7 @@ describe('light-transition Node', function () {
 						count++;
 						if (count === numSteps) {
 							msg.should.have.property('payload', endMsg);
+							n1.receive(stpMsg);
 							done();
 						}
 					} catch (err) {
