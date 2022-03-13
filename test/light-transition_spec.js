@@ -194,12 +194,10 @@ describe('light-transition Node', function () {
 				let n1 = helper.getNode('n1');
 				let n2 = helper.getNode('n2');
 				n2.on('input', (msg) => {
-					console.log(msg.payload);
 					try {
 						count++;
 						if (count === numSteps) {
 							msg.should.have.property('payload', endMsg);
-							n1.receive(stpMsg);
 							done();
 						}
 					} catch (err) {
