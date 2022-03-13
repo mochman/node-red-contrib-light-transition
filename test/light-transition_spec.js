@@ -163,7 +163,7 @@ describe('light-transition Node', function () {
 		});
 	});
 
-	for (let i = 0; i < trys.length; i++) {
+	/*for (let i = 0; i < trys.length; i++) {
 		it(`msg.payload with forced input ${i + 1}`, function (done) {
 			let forcedInp = trys[i][1];
 			let msg = trys[i][0];
@@ -182,7 +182,7 @@ describe('light-transition Node', function () {
 				n1.receive(stpMsg);
 			});
 		});
-	}
+	}*/
 
 	for (let i = 0; i < trys.length; i++) {
 		it(`msg.payload check last output ${i + 1}`, function (done) {
