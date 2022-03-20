@@ -1,5 +1,12 @@
-# Light Transition for node-red
-[![Node-Red Tests](https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml/badge.svg)](https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml)
+<p align="center">
+  <h1 align="center">Light Transition for node-red</h1> 
+</p>
+<p align="center">
+  <a href="https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml"><img src="https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml/badge.svg"></a>
+  <a href=""><img src="https://img.shields.io/github/license/mochman/node-red-contrib-light-transition"></a>
+  <a href=""><img src="https://img.shields.io/npm/v/node-red-contrib-light-transition"></a>
+</p>
+
 ---
 
 ## **Overview:**
