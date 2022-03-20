@@ -3,8 +3,8 @@
 </p>
 <p align="center">
   <a href="https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml"><img src="https://github.com/mochman/node-red-contrib-light-transition/actions/workflows/tests.yml/badge.svg"></a>
-  <a href=""><img src="https://img.shields.io/github/license/mochman/node-red-contrib-light-transition"></a>
-  <a href=""><img src="https://img.shields.io/npm/v/node-red-contrib-light-transition"></a>
+  <a href="https://github.com/mochman/node-red-contrib-light-transition/blob/main/LICENSE"><img src="https://img.shields.io/github/license/mochman/node-red-contrib-light-transition"></a>
+  <a href="https://www.npmjs.com/package/node-red-contrib-light-transition"><img src="https://img.shields.io/npm/v/node-red-contrib-light-transition"></a>
 </p>
 
 ---
