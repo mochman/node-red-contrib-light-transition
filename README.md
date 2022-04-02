@@ -102,7 +102,7 @@ You can also manually stop the node by sending a `msg.payload` of `stop` or `STO
 
 ![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/multiple_flow.png?raw=true)
 
-- The first transition node changes the color from red to yellow / brightness 1 to 100%.
+- The first transition node changes the color from red to yellow with a Half & Half transition. The Brightness changes from 1 to 100% with a linear transition. It also changes the mireds from 100 to 800.
 
 ![](https://github.com/mochman/node-red-contrib-light-transition/blob/main/images/node_settings.png?raw=true)
 
@@ -113,7 +113,7 @@ You can also manually stop the node by sending a `msg.payload` of `stop` or `STO
 
 - The "Complete" switch node only passes a message when the `msg.payload` = `complete`. This ensures that the second node won't get started when a stop command is sent to the first node since the nodes will send a `stopped` message when forced to stop.
 
-- The second transition node changes the mireds from 525(warm) to 160 (cool) / brightness 1 to 100%.
+- The second transition node changes the mireds from 525 (warm) to 160 (cool). The Brightness changes from 100 to 0% with an exponential transision.
 
 ![](./images/node_settings2.png)
 
