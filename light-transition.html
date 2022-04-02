@@ -31,7 +31,11 @@
   });
 </script>
 
-<script type="text/x-red" data-template-name="light-transition">
+<script type="text/html" data-template-name="light-transition">
+  <div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+		<input type="text" id="node-input-name" placeholder="Name"></input>
+	</div>
 	<div class="form-row">
 		<label for="node-input-transitionTime"><i class="fa fa-clock-o"></i> Total Time</label>
 		<input type="text" id="node-input-transitionTime" style="text-align:end; width:70px !important">
@@ -45,63 +49,79 @@
 		<label for="node-input-steps"><i class="fa fa-repeat"></i> # of steps</label>
 		<input type="text" id="node-input-steps" style="text-align:end; width:100px !important">
 	</div>
-	<div class="form-row">
-		<label for="node-input-startRGB"><i class="fa fa-eyedropper"></i> Starting Color</label>
-		<input type="color" id="node-input-startRGB" style="text-align:end; width:100px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-transitionRGB"><i class="fa fa-eyedropper"></i> Intermediate Color</label>
-		<input type="color" id="node-input-transitionRGB" style="text-align:end; width:100px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-endRGB"><i class="fa fa-eyedropper"></i> End Color</label>
-		<input type="color" id="node-input-endRGB" style="text-align:end; width:100px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-startMired"><i class="fa fa-arrows-h"></i> Starting mireds</label>
-		<input type="text" id="node-input-startMired" style="text-align:end; width:70px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-endMired"><i class="fa fa-arrows-h"></i> Ending mireds</label>
-		<input type="text" id="node-input-endMired" style="text-align:end; width:70px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-startBright"><i class="fa fa-lightbulb-o"></i> Starting Brightness</label>
-		<input type="text" id="node-input-startBright" style="text-align:end; width:70px !important">
-	</div>
-	<div class="form-row">
-		<label for="node-input-endBright"><i class="fa fa-lightbulb-o"></i> Ending Brightness</label>
-		<input type="text" id="node-input-endBright" style="text-align:end; width:70px !important">
-	</div>
+  <div style="margin:0px; line-height: 0%">
+    <hr style="margin-top:10px; margin-bottom:10px">
+    <h3>Colors:</h3>
+  </div>
   <div class="form-row">
-		<label for="node-input-brightnessType"><i class="fa fa-arrows-v"></i> Brightness Type</label>
-		<select id="node-input-brightnessType" style="width:140px !important">
-			<option value="Percent">Percent</option>
-			<option value="Integer">Integer</option>
-		</select>
-	</div>
-	<div class="form-row">
-		<label for="node-input-transitionType"><i class="fa fa-line-chart"></i> Brightness Transition</label>
-		<select id="node-input-transitionType" style="width:140px !important">
-			<option value="Linear">Linear</option>
-			<option value="Exponential">Exponential</option>
-		</select>
-	</div>
+    <table style="border-collapse: collapse; border:none; width:100%">
+      <tbody>
+        <tr>
+          <th></th>
+          <th style="text-align:center">Starting</th>
+          <th style="text-align:center">Middle</th>
+          <th style="text-align:center">End</th>
+        </tr>
+        <tr>
+          <td><i class="fa fa-eyedropper"></i> RGB</td>
+          <td style="text-align:center"><input type="color" id="node-input-startRGB" style="text-align:end; width:90px !important"></td>
+          <td style="text-align:center"><input type="color" id="node-input-transitionRGB" style="text-align:end; width:90px !important"></td>
+          <td style="text-align:center"><input type="color" id="node-input-endRGB" style="text-align:end; width:90px !important"></td>
+        </tr>
+        <tr>
+          <td><i class="fa fa-arrows-h"></i> Mired</td>
+          <td style="text-align:center"><input type="text" id="node-input-startMired" style="text-align:end; width:90px !important; margin-top:4px;"></td>
+          <td></td>
+          <td style="text-align:center"><input type="text" id="node-input-endMired" style="text-align:end; width:90px !important; margin-top:4px;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
   <div class="form-row">
-		<label for="node-input-colorTransitionType"><i class="fa fa-line-chart"></i> Color Transition</label>
+		<label for="node-input-colorTransitionType"><i class="fa fa-line-chart"></i> Transition</label>
 		<select id="node-input-colorTransitionType" style="width:170px !important">
 			<option value="Weighted">Weighted</option>
 			<option value="Half">Half & Half</option>
       <option value="None">No Transition Color</option>
 		</select>
 	</div>
+  <div style="margin:0px; line-height: 0%">
+    <hr style="margin-top:10px; margin-bottom:10px">
+    <h3>Brightness:</h3>
+  </div>
+  <div class="form-row">
+    <table style="border-collapse: collapse; border:none; width:50%">
+      <tbody>
+        <tr>
+          <th></th>
+          <th style="text-align:center">Starting</th>
+          <th style="text-align:center">End</th>
+        </tr>
+        <tr>
+          <td><i class="fa fa-lightbulb-o"></i> Value</td>
+          <td style="text-align:center"><input type="text" id="node-input-startBright" style="text-align:end; width:70px !important"></td>
+          <td style="text-align:center"><input type="text" id="node-input-endBright" style="text-align:end; width:70px !important"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="form-row">
+		<label for="node-input-brightnessType"><i class="fa fa-arrows-v"></i> Type</label>
+		<select id="node-input-brightnessType" style="width:140px !important">
+			<option value="Percent">Percent</option>
+			<option value="Integer">Integer</option>
+		</select>
+	</div>
 	<div class="form-row">
-		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-		<input type="text" id="node-input-name" placeholder="Name"></input>
+		<label for="node-input-transitionType"><i class="fa fa-line-chart"></i> Transition</label>
+		<select id="node-input-transitionType" style="width:140px !important">
+			<option value="Linear">Linear</option>
+			<option value="Exponential">Exponential</option>
+		</select>
 	</div>
 </script>
 
-<script type="text/x-red" data-help-name="light-transition">
+<script type="text/html" data-help-name="light-transition">
 		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.brightness</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
 	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
 	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.
