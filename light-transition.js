@@ -13,6 +13,7 @@ module.exports = function (RED) {
     return (unitMap.find(o => o.unit === unit).duration * duration);
   }
 
+  // Takes in ms and returns a string with human readable times i.e. "45 Seconds" / "3 Hours"
   function readableDuration(duration) {
     let maxSeconds = 90;
     let maxMinutes = 60;
@@ -26,6 +27,7 @@ module.exports = function (RED) {
     }
   }
 
+  // Takes in "#fa12b3" and returns an array with decimal values i.e. [250,18,179]
   function hexToRGB(hex) {
     let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? [
@@ -35,6 +37,7 @@ module.exports = function (RED) {
     ] : null;
   }
 
+  // Linear interpolation of input y given starting and ending ranges
   function scale(y, range1 = [0,100], range2 = [0,255]) {
     const [xMin, xMax] = range2;
     const [yMin, yMax] = range1;
@@ -72,6 +75,7 @@ module.exports = function (RED) {
       this.colorTransitionType = n.colorTransitionType || 'Weighted';
       if (this.transitionTime <= 1) this.transitionTime = 1;
 
+      // Input checking of any received msg
       if (msg.transition != undefined) {
 
         if (msg.transition.startRGB != undefined) {
@@ -210,6 +214,7 @@ module.exports = function (RED) {
       transition.setTimeout(node.nodemaxtimeout);
       transition.setMaxLoop(node.steps - 1);
 
+      //Make sure starting and ending brightness are within 0-100%, scaling if not using 'Percent'
       if(node.startBright < 0) node.startBright = 0;
       if(node.endBright < 0) node.endBright = 0;
 
@@ -234,6 +239,10 @@ module.exports = function (RED) {
       colors.push(hexToRGB(node.transitionRGB));
       colors.push(hexToRGB(node.endRGB));
 
+      // Finds the 'distance' between the starting/transition/ending colors using the redmean approximation
+      // https://en.wikipedia.org/wiki/Color_difference#sRGB
+      // d1 array will have the distance between starting & transition colors per steps required to arrive there.  d2 - transition & ending.
+      // tMid will be the number of steps to the transition color.
       for (let i = 0; i < 2; i++) {
         deltas[i] = [colors[i][0] - colors[i + 1][0], colors[i][1] - colors[i + 1][1], colors[i][2] - colors[i + 1][2]];
         means[i] = (colors[i][0] + colors[i + 1][0]) / 2;
@@ -246,6 +255,8 @@ module.exports = function (RED) {
         d1[i] = Math.floor((colors[1][i] - colors[0][i]) / tMid);
         d2[i] = Math.floor((colors[2][i] - colors[1][i]) / (node.steps - tMid));
       }
+
+
       let exponB = 0;
       if (node.startBright <= node.endBright) {
         exponB = Math.log(node.endBright / node.startBright) / (node.steps - 1);
@@ -258,6 +269,7 @@ module.exports = function (RED) {
         clearTimeout(timeout);
         timeout = null;
         if (msg.payload !== undefined && msg.payload.toString().toLowerCase() === 'stop') {
+          // If msg.payload is sent a stop command, stop the loop and quit
           node.status({ fill: 'red', shape: 'ring', text: 'stopped' });
           stopped = true;
           stopmsg = RED.util.cloneMessage(msg);
@@ -266,8 +278,9 @@ module.exports = function (RED) {
           node.send([null, stopmsg]);
           stopped = false;
         } else {
-          let lightMsg = RED.util.cloneMessage(msg);
-          delete lightMsg['_timerpass'];
+          // Initial loop output
+          let lightMsg = RED.util.cloneMessage(msg); // Copy msg object to preserve user keys i.e. msg.topic
+          delete lightMsg['_timerpass']; // Remove internal timerpass key
           lightMsg.payload = {
               brightness_pct: node.startBright,
               brightness: scale(node.startBright),
@@ -282,6 +295,7 @@ module.exports = function (RED) {
             timeout = setTimeout(function () {
               if (stopped === false) {
                 if (data == node.steps - 1) {
+                  // Final loop output
                   let lightMsg = RED.util.cloneMessage(msg);
                   delete lightMsg['_timerpass'];
                     lightMsg.payload = {
@@ -302,26 +316,31 @@ module.exports = function (RED) {
                   timeout = null;
                   next('break');
                 } else {
+                  // All other loop outputs
                   node.status({});
                   if ((data * node.nodeduration) <= node.nodemaxtimeout) {
                     let colorChange = [0,0,0];
                     for(let i = 0; i < colorChange.length; i++) {
                       switch (node.colorTransitionType) {
                         case 'Weighted':
+                          // Either add the transition 'distance' to the starting RGB values or the transition RGB value
                           if(data <= tMid) colorChange[i] = colors[0][i] + data * d1[i];
                           else colorChange[i] = colors[1][i] + (data - tMid) * d2[i];
                           break;
                         case 'Half':
+                          // Find the middle number of total steps, then subtract the average distance / steps from the starting/transition RGB values
                           let midPt = Math.floor((node.steps - 1) / 2);
                           if(data == midPt) colorChange = hexToRGB(node.transitionRGB);
                           else if(data <= midPt) colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt * data);
                           else colorChange[i] = colors[1][i] - Math.floor((colors[1][i] - colors[2][i]) / (node.steps - midPt - 1) * (data - midPt));
                           break;
                         case 'None':
+                          // Just increments the starting RGB value by the average of the starting & ending RGB values / num of steps.
                           colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[2][i])/node.steps) * data;
                           break;
                       }
                     }
+                    // Just increments the mired value by the average of the starting & ending mired values / num of steps.
                     let miredChange = Math.floor((node.endMired - node.startMired) / (node.steps - 1) * data + node.startMired);
                     let brightnessChange = 0;
                     switch(node.transitionType) {
