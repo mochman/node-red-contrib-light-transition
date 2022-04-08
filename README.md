@@ -124,6 +124,8 @@ You can also manually stop the node by sending a `msg.payload` of `stop` or `STO
 
 ## **Changelog**
 
+v1.7.1 (8 Apr 22) - Fixed issue where RGB value could be above 255 when using No Transition mode.
+
 v1.7.0 (2 Apr 22) - Updated UI
 
 v1.6.0 (12 Mar 22) - All messages pass through original msg object (except payload).
