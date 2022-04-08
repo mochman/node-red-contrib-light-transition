@@ -89,7 +89,7 @@ let trysRGB = [
 			endBright: 100,
 			units: 'Second',
 			steps: 60,
-			duration: 3,
+			duration: 2,
 			colorTransitionType: 'None',
 		},
 	},
@@ -102,8 +102,58 @@ let trysRGB = [
 			endBright: 99,
 			units: 'Second',
 			steps: 60,
-			duration: 3,
+			duration: 2,
 			colorTransitionType: 'Half',
+		},
+	},
+	{
+		transition: {
+			startBright: 1,
+			startRGB: '#CAFE3E',
+			endRGB: '#FFFF00',
+			endBright: 99,
+			units: 'Second',
+			steps: 60,
+			duration: 2,
+			colorTransitionType: 'None',
+		},
+	},
+	{
+		transition: {
+			startBright: 1,
+			startRGB: '#FFFF00',
+			endRGB: '#CAFE3E',
+			endBright: 99,
+			units: 'Second',
+			steps: 60,
+			duration: 2,
+			colorTransitionType: 'None',
+		},
+	},
+	{
+		transition: {
+			startBright: 1,
+			startRGB: '#FF1C1C',
+			transitionRGB: '#F76A02',
+			endRGB: '#FFFFFF',
+			endBright: 99,
+			units: 'Second',
+			steps: 60,
+			duration: 2,
+			colorTransitionType: 'Weighted',
+		},
+	},
+	{
+		transition: {
+			startBright: 1,
+			startRGB: '#FF1C1C',
+			transitionRGB: '#F76A02',
+			endRGB: '#FFFFFF',
+			endBright: 99,
+			units: 'Second',
+			steps: 60,
+			duration: 2,
+			colorTransitionType: 'Weighted',
 		},
 	},
 ];
@@ -255,7 +305,7 @@ describe('light-transition Node', function () {
 					if (msg.payload.rgb_color.filter((x) => x > 255).length) {
 						done(new Error(`Value greater than 255 at index:${count} - [${msg.payload.rgb_color}]`));
 					} else if (msg.payload.rgb_color.filter((x) => x < 0).length) {
-						done(new Error(`Value less than 0 at index:${count}`));
+						done(new Error(`Value less than 0 at index:${count}  - [${msg.payload.rgb_color}]`));
 					}
 					if (count === numMsgs) {
 						done();
