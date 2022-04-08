@@ -336,7 +336,7 @@ module.exports = function (RED) {
                           break;
                         case 'None':
                           // Just increments the starting RGB value by the average of the starting & ending RGB values / num of steps.
-                          colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[2][i])/node.steps) * data;
+                          colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[2][i]) / node.steps * data);
                           break;
                       }
                     }
