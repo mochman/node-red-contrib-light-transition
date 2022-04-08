@@ -43,7 +43,7 @@ module.exports = function (RED) {
     const [yMin, yMax] = range1;
     const percent = (y - yMin) / (yMax - yMin);
     const ans = percent * (xMax - xMin) + xMin;
-    return Math.ceil(ans);
+    return Math.round(ans);
   }
 
   function LightTransition(n) {
@@ -239,24 +239,6 @@ module.exports = function (RED) {
       colors.push(hexToRGB(node.transitionRGB));
       colors.push(hexToRGB(node.endRGB));
 
-      // Finds the 'distance' between the starting/transition/ending colors using the redmean approximation
-      // https://en.wikipedia.org/wiki/Color_difference#sRGB
-      // d1 array will have the distance between starting & transition colors per steps required to arrive there.  d2 - transition & ending.
-      // tMid will be the number of steps to the transition color.
-      for (let i = 0; i < 2; i++) {
-        deltas[i] = [colors[i][0] - colors[i + 1][0], colors[i][1] - colors[i + 1][1], colors[i][2] - colors[i + 1][2]];
-        means[i] = (colors[i][0] + colors[i + 1][0]) / 2;
-        changeDist[i] = Math.sqrt((2 + means[i] / 256) * deltas[i][0] * deltas[i][0] + 4 * deltas[i][1] * deltas[i][1] + (2 + (255 - means[i] / 256)) * deltas[i][2] * deltas[i][2]);
-      }
-      let tMid = Math.floor(node.steps * changeDist[0] / (changeDist[0] + changeDist[1]));
-      let d1 = [];
-      let d2 = [];
-      for (let i = 0; i < 3; i++) {
-        d1[i] = Math.floor((colors[1][i] - colors[0][i]) / tMid);
-        d2[i] = Math.floor((colors[2][i] - colors[1][i]) / (node.steps - tMid));
-      }
-
-
       let exponB = 0;
       if (node.startBright <= node.endBright) {
         exponB = Math.log(node.endBright / node.startBright) / (node.steps - 1);
@@ -323,8 +305,28 @@ module.exports = function (RED) {
                     for(let i = 0; i < colorChange.length; i++) {
                       switch (node.colorTransitionType) {
                         case 'Weighted':
+                          // Finds the 'distance' between the starting/transition/ending colors using the redmean approximation
+                          // https://en.wikipedia.org/wiki/Color_difference#sRGB
+                          // d1 array will have the distance between starting & transition colors per steps required to arrive there.  d2 - transition & ending.
+                          // tMid will be the number of steps to the transition color.
+                          for (let i = 0; i < 2; i++) {
+                            deltas[i] = [colors[i][0] - colors[i + 1][0], colors[i][1] - colors[i + 1][1], colors[i][2] - colors[i + 1][2]];
+                            means[i] = (colors[i][0] + colors[i + 1][0]) / 2;
+                            changeDist[i] = Math.sqrt((2 + means[i] / 256) * deltas[i][0] * deltas[i][0] + 4 * deltas[i][1] * deltas[i][1] + (2 + (255 - means[i] / 256)) * deltas[i][2] * deltas[i][2]);
+                          }
+                          let tMid = Math.trunc(node.steps * changeDist[0] / (changeDist[0] + changeDist[1]));
+                          let d1 = [];
+                          let d2 = [];
+                          for (let i = 0; i < 3; i++) {
+                            d1[i] = Math.trunc((colors[1][i] - colors[0][i]) / tMid);
+                            d2[i] = Math.trunc((colors[2][i] - colors[1][i]) / (node.steps - tMid));
+                          }
                           // Either add the transition 'distance' to the starting RGB values or the transition RGB value
-                          if(data <= tMid) colorChange[i] = colors[0][i] + data * d1[i];
+                          if(data < tMid) {
+                            colorChange[i] = colors[0][i] + data * d1[i];
+                          } else if(data === tMid) {
+                            colorChange[i] = colors[1][i];
+                          }
                           else colorChange[i] = colors[1][i] + (data - tMid) * d2[i];
                           break;
                         case 'Half':
@@ -349,7 +351,7 @@ module.exports = function (RED) {
                         else brightnessChange = node.startBright - Math.floor(node.endBright * Math.exp(exponB * data)) + node.endBright;
                         break;
                       case 'Linear':
-                        brightnessChange = Math.floor((node.endBright - node.startBright) / (node.steps - 1) * data + node.startBright);
+                        brightnessChange = Math.trunc((node.endBright - node.startBright) / (node.steps - 1) * data + node.startBright);
                         break;
                     }
                     let lightMsg = RED.util.cloneMessage(msg);
