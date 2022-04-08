@@ -37,6 +37,7 @@ let trys = [
 				endBright: 87,
 				endMired: 100,
 				units: 'Second',
+				duration: 2,
 			},
 		},
 		{
@@ -61,6 +62,7 @@ let trys = [
 				endRGB: '#FA0024',
 				endBright: 14,
 				units: 'Second',
+				duration: 2,
 			},
 		},
 		{
@@ -76,6 +78,34 @@ let trys = [
 			rgb_color: [250, 0, 36],
 		},
 	],
+];
+
+let trysRGB = [
+	{
+		transition: {
+			startBright: 0,
+			startRGB: '#C2A800',
+			endRGB: '#FF0000',
+			endBright: 100,
+			units: 'Second',
+			steps: 60,
+			duration: 3,
+			colorTransitionType: 'None',
+		},
+	},
+	{
+		transition: {
+			startBright: 1,
+			startRGB: '#FF1C1C',
+			transitionRGB: '#F76A02',
+			endRGB: '#FFFFFF',
+			endBright: 99,
+			units: 'Second',
+			steps: 60,
+			duration: 3,
+			colorTransitionType: 'Half',
+		},
+	},
 ];
 
 let stpMsg = { payload: 'STOP' };
@@ -188,7 +218,7 @@ describe('light-transition Node', function () {
 		it(`msg.payload check last output ${i + 1}`, function (done) {
 			let endMsg = trys[i][2];
 			let sndMsg = trys[i][0];
-			this.timeout(6000);
+			this.timeout(4000);
 			let count = 0;
 			helper.load(lightNode, startingFlow, function () {
 				let n1 = helper.getNode('n1');
@@ -204,6 +234,31 @@ describe('light-transition Node', function () {
 						}
 					} catch (err) {
 						done(err);
+					}
+				});
+				n1.receive(sndMsg);
+			});
+		});
+	}
+
+	for (let i = 0; i < trysRGB.length; i++) {
+		it(`RGB Values - ${i + 1}`, function (done) {
+			const sndMsg = trysRGB[i];
+			const numMsgs = sndMsg.transition.steps;
+			this.timeout(1000 * (sndMsg.transition.duration + 1));
+			let count = 0;
+			helper.load(lightNode, startingFlow, function () {
+				let n1 = helper.getNode('n1');
+				let n2 = helper.getNode('n2');
+				n2.on('input', (msg) => {
+					count++;
+					if (msg.payload.rgb_color.filter((x) => x > 255).length) {
+						done(new Error(`Value greater than 255 at index:${count} - [${msg.payload.rgb_color}]`));
+					} else if (msg.payload.rgb_color.filter((x) => x < 0).length) {
+						done(new Error(`Value less than 0 at index:${count}`));
+					}
+					if (count === numMsgs) {
+						done();
 					}
 				});
 				n1.receive(sndMsg);
