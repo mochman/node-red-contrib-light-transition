@@ -41,7 +41,7 @@ let trys = [
 			},
 		},
 		{
-			brightness: 90,
+			brightness: 89,
 			brightness_pct: 35,
 			color_temp: 423,
 			rgb_color: [255, 0, 0],
