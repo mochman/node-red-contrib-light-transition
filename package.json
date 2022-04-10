@@ -4,7 +4,8 @@
 	"description": "Transitions a light's color & brightness based on defined settings.",
 	"main": "light-transition.js",
 	"scripts": {
-		"test": "mocha \"test/*_spec.js\""
+		"test": "mocha \"test/*_spec.js\"",
+		"testRandom": "mocha \"test/random_tests_spec.js\""
 	},
 	"keywords": [
 		"node-red",
