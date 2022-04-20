@@ -239,13 +239,6 @@ module.exports = function (RED) {
       colors.push(hexToRGB(node.transitionRGB));
       colors.push(hexToRGB(node.endRGB));
 
-      let exponB = 0;
-      if (node.startBright <= node.endBright) {
-        exponB = Math.log(node.endBright / node.startBright) / (node.steps - 1);
-      } else {
-        exponB = Math.log(node.startBright / node.endBright) / (node.steps - 1);
-      }
-
       if (stopped === false || msg._timerpass !== true) {
         stopped = false;
         clearTimeout(timeout);
@@ -347,8 +340,16 @@ module.exports = function (RED) {
                     let brightnessChange = 0;
                     switch(node.transitionType) {
                       case 'Exponential':
-                        if(node.startBright <= node.endBright) brightnessChange = Math.floor(node.startBright * Math.exp(exponB * data));
-                        else brightnessChange = node.startBright - Math.floor(node.endBright * Math.exp(exponB * data)) + node.endBright;
+                        const endBrightExp = node.endBright === 0 ? 1 : node.endBright;
+                        const startBrightExp = node.startBright === 0 ? 1 : node.startBright;
+                        let exponB = 0;
+                        if (node.startBright <= node.endBright) {
+                          exponB = Math.log(node.endBright / startBrightExp) / (node.steps - 1);
+                          brightnessChange = Math.floor(startBrightExp * Math.exp(exponB * data));
+                        } else {
+                          exponB = Math.log(startBrightExp / endBrightExp) / (node.steps - 1);
+                          brightnessChange = startBrightExp - Math.floor(endBrightExp * Math.exp(exponB * data)) + endBrightExp;
+                        }
                         break;
                       case 'Linear':
                         brightnessChange = Math.trunc((node.endBright - node.startBright) / (node.steps - 1) * data + node.startBright);
