@@ -5,7 +5,7 @@
 	"main": "light-transition.js",
 	"scripts": {
 		"test": "mocha \"test/*_spec.js\"",
-		"testRandom": "mocha \"test/random_tests_spec.js\""
+		"testRandom": "mocha \"test/random_*_tests_spec.js\""
 	},
 	"keywords": [
 		"node-red",
