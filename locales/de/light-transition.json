@@ -1,0 +1,33 @@
+{
+	"light-transition": {
+		"label": {
+			"time": "Gesamtzeit",
+			"steps": "Anzahl der Schritte",
+			"transition": "Überleitung",
+			"colors": "Farben",
+			"brightness": "Helligkeit",
+			"value": "Wert",
+			"starting": "Beginn",
+			"middle": "Mitte",
+			"end": "Ende",
+			"type": "Art"
+		},
+		"description": {
+			"running": "Ausführung",
+			"every": "jeder",
+			"completed": "abgeschlossen um"
+		},
+		"errors": {
+			"invalidA": "ungültiges Attribut",
+			"formatted": "muss wie #ffab13 formatiert sein",
+			"posInt": "muss eine positive ganze Zahl sein",
+			"brightnessVal": "muss zwischen 0 und 255 liegen",
+			"allowedVals": "zulässige Werte sind"
+		},
+		"time": {
+			"Second": "Sekunde",
+			"Minute": "Minute",
+			"Hour": "Stunde"
+		}
+	}
+}

@@ -16,14 +16,14 @@ module.exports = function (RED) {
   // Takes in ms and returns a string with human readable times i.e. "45 Seconds" / "3 Hours"
   function readableDuration(duration) {
     let maxSeconds = 90;
-    let maxMinutes = 60;
+    let maxMinutes = 59;
     let seconds = parseInt(duration) / 1000;
     if(seconds <= maxSeconds) {
-      return Math.round(seconds * 10) / 10 + ' Second' + (seconds > 1 ? 's':'');
+      return Math.round(seconds * 10) / 10 + ' ' + (seconds > 1 ? RED._('node-red:delay.secs') : RED._('node-red:delay.sec'));
     } else if(seconds/60 <= maxMinutes) {
-      return Math.round(seconds/6) / 10 + ' Minute' + (seconds/60 > 1 ? 's':'');
+      return Math.round(seconds/6) / 10 + ' ' + (seconds/60 > 1 ? RED._('node-red:delay.mins') : RED._('node-red:delay.min'));
     } else {
-      return Math.round(seconds/360) / 10 + ' Hour' + (seconds/3600 > 1 ? 's':'');
+      return Math.round(seconds/360) / 10 + ' ' + (seconds/3600 > 1 ? RED._('node-red:delay.hours') : RED._('node-red:delay.hour'));
     }
   }
 
@@ -82,8 +82,8 @@ module.exports = function (RED) {
           if (rgbRegex.test(msg.transition.startRGB)) {
             node.startRGB = msg.transition.startRGB;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startRGB must be formatted like #ffab13' });
-            node.error('Invalid Attribute: msg.transition.startRGB, value must be formatted like #ffab13');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startRGB ' + RED._('light-transition.errors.formatted') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.startRGB - '+ RED._('light-transition.errors.formatted'));
             return;
           }
         }
@@ -92,8 +92,8 @@ module.exports = function (RED) {
           if (rgbRegex.test(msg.transition.transitionRGB)) {
             node.transitionRGB = msg.transition.transitionRGB;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.transitionRGB must be formatted like #ffab13' });
-            node.error('Invalid Attribute: msg.transition.transitionRGB, value must be formatted like #ffab13');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.transitionRGB '+ RED._('light-transition.errors.formatted') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.transitionRGB - '+ RED._('light-transition.errors.formatted'));
             return;
           }
         }
@@ -102,8 +102,8 @@ module.exports = function (RED) {
           if (rgbRegex.test(msg.transition.endRGB)) {
             node.endRGB = msg.transition.endRGB;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endRGB must be formatted like #ffab13' });
-            node.error('Invalid Attribute: msg.transition.endRGB, value must be formatted like #ffab13');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endRGB '+ RED._('light-transition.errors.formatted') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.endRGB - '+ RED._('light-transition.errors.formatted'));
             return;
           }
         }
@@ -112,8 +112,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.startMired === 'number' && msg.transition.startMired > 0) {
             node.startMired = parseInt(msg.transition.startMired);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startMired must be a positive integer' });
-            node.error('Invalid Attribute: msg.transition.startMired, value must be a positive integer');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startMired ' + RED._('light-transition.errors.posInt') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.startMired - ' + RED._('light-transition.errors.posInt'));
             return;
           }
         }
@@ -122,8 +122,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.endMired === 'number' && msg.transition.endMired > 0) {
             node.endMired = parseInt(msg.transition.endMired);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endMired must be a positive integer' });
-            node.error('Invalid Attribute: msg.transition.endMired, value must be a positive integer');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endMired ' + RED._('light-transition.errors.posInt') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.endMired - ' + RED._('light-transition.errors.posInt'));
             return;
           }
         }
@@ -132,8 +132,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.duration === 'number' && msg.transition.duration > 0) {
             node.transitionTime = parseInt(msg.transition.duration);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.duration must be a positive integer' });
-            node.error('Invalid Attribute: msg.transition.duration, value must be a positive integer');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.duration ' + RED._('light-transition.errors.posInt') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.duration - ' + RED._('light-transition.errors.posInt'));
             return;
           }
         }
@@ -142,8 +142,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.steps === 'number' && msg.transition.steps > 0) {
             node.steps = parseInt(msg.transition.steps);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.steps must be a positive integer' });
-            node.error('Invalid Attribute: msg.transition.steps, value must be a positive integer');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.steps ' + RED._('light-transition.errors.posInt') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.steps - ' + RED._('light-transition.errors.posInt'));
             return;
           }
         }
@@ -152,8 +152,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.startBright === 'number' && msg.transition.startBright >= 0 && msg.transition.startBright <= 255) {
             node.startBright = parseInt(msg.transition.startBright);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startBright must be between 0 and 255' });
-            node.error('Invalid Attribute: msg.transition.startBright, value must be between 0 and 255');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.startBright ' + RED._('light-transition.errors.brightnessVal') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.startBright - ' + RED._('light-transition.errors.brightnessVal'));
             return;
           }
         }
@@ -162,8 +162,8 @@ module.exports = function (RED) {
           if (typeof msg.transition.endBright === 'number' && msg.transition.endBright >= 0 && msg.transition.endBright <= 255) {
             node.endBright = parseInt(msg.transition.endBright);
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endBright must be between 0 and 255' });
-            node.error('Invalid Attribute: msg.transition.endBright, value must be between 0 and 255');
+            node.status({ fill: 'red', shape: 'ring', text: 'msg.transition.endBright ' + RED._('light-transition.errors.brightnessVal') });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.endBright - ' + RED._('light-transition.errors.brightnessVal'));
             return;
           }
         }
@@ -172,8 +172,8 @@ module.exports = function (RED) {
           if ((msg.transition.units === 'Second') || (msg.transition.units === 'Minute') || (msg.transition.units === 'Hour')) {
             node.transitionTimeUnits = msg.transition.units;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'Invalid attribute msg.transition.units' });
-            node.error('Invalid Attribute: msg.transition.units, allowed values are Second, Minute, and Hour');
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.units' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.units, ' + RED._('light-transition.errors.allowedVals') + ' Second, Minute, and Hour');
             return;
           }
         }
@@ -182,8 +182,8 @@ module.exports = function (RED) {
           if ((msg.transition.brightnessType === 'Percent') || (msg.transition.brightnessType === 'Integer')) {
             node.brightnessType = msg.transition.brightnessType;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'Invalid attribute msg.transition.brightnessType' });
-            node.error('Invalid Attribute: msg.transition.brightnessType, allowed values are Percent or Integer');
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.brightnessType' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.brightnessType, ' + RED._('light-transition.errors.allowedVals') + ' Percent or Integer');
             return;
           }
         }
@@ -192,8 +192,8 @@ module.exports = function (RED) {
           if ((msg.transition.transitionType === 'Linear') || (msg.transition.transitionType === 'Exponential')) {
             node.transitionType = msg.transition.transitionType;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'Invalid attribute msg.transition.transitionType' });
-            node.error('Invalid Attribute: msg.transition.transitionType, allowed values are Linear or Exponential');
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.transitionType' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.transitionType, ' + RED._('light-transition.errors.allowedVals') + ' Linear or Exponential');
             return;
           }
         }
@@ -202,8 +202,8 @@ module.exports = function (RED) {
           if ((msg.transition.colorTransitionType === 'Weighted') || (msg.transition.colorTransitionType === 'Half') || (msg.transition.colorTransitionType === 'None')) {
             node.colorTransitionType = msg.transition.colorTransitionType;
           } else {
-            node.status({ fill: 'red', shape: 'ring', text: 'Invalid attribute msg.transition.colorTransitionType' });
-            node.error('Invalid Attribute: msg.transition.colorTransitionType, allowed values are Weighted, Half or None');
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.colorTransitionType' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.colorTransitionType, ' + RED._('light-transition.errors.allowedVals') + ' Weighted, Half or None');
             return;
           }
         }
@@ -245,7 +245,7 @@ module.exports = function (RED) {
         timeout = null;
         if (msg.payload !== undefined && msg.payload.toString().toLowerCase() === 'stop') {
           // If msg.payload is sent a stop command, stop the loop and quit
-          node.status({ fill: 'red', shape: 'ring', text: 'stopped' });
+          node.status({ fill: 'red', shape: 'ring', text: `node-red:inject.stopped` });
           stopped = true;
           stopmsg = RED.util.cloneMessage(msg);
           stopmsg.payload = 'stopped';
@@ -265,7 +265,7 @@ module.exports = function (RED) {
           node.send([lightMsg, null]);
           msg._timerpass = true;
           transition.run(function (next, err, data) {
-            node.status({ fill: 'green', shape: 'ring', text: 'running ' + (data + 1) + '/' + node.steps + ' - Every ' + readableDuration(node.nodeduration) });
+            node.status({ fill: 'green', shape: 'ring', text: `${RED._('light-transition.description.running')} ${data + 1}/${node.steps} - ${RED._('light-transition.description.every')} ${readableDuration(node.nodeduration)}` });
             data++;
             timeout = setTimeout(function () {
               if (stopped === false) {
@@ -287,7 +287,7 @@ module.exports = function (RED) {
                   let splitDate = now.toDateString().split(' ');
                   let splitTime = now.toTimeString().split(':');
                   let goodDate = splitDate[1] + ' ' + splitDate[2] + ', ' + splitTime[0] + ':' + splitTime[1];
-                  node.status({ fill: 'green', shape: 'dot', text: 'completed at ' + goodDate });
+                  node.status({ fill: 'green', shape: 'dot', text: `${RED._('light-transition.description.completed')} ${goodDate}` });
                   timeout = null;
                   next('break');
                 } else {
