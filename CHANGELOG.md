@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localization files (en_US & de)
 - This Change Log
 
+### Changed
+
+- Updated README with new CHANGELOG.
+
 ## [1.7.3] - 2022-04-20
 
 ### Changed
