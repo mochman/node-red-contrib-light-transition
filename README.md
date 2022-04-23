@@ -128,40 +128,4 @@ If you would like to help with translating, please see the [locales](https://git
 
 ## **Changelog**
 
-v1.7.3 (20 Apr 22) - Fixed issue where Exponential brightness values could be NaN.
-
-v1.7.2 (8 Apr 22) - Fixed issue where RGB value could be below 0 when using Weighted Transition mode.
-
-v1.7.1 (8 Apr 22) - Fixed issue where RGB value could be above 255 when using No Transition mode.
-
-v1.7.0 (2 Apr 22) - Updated UI
-
-v1.6.0 (12 Mar 22) - All messages pass through original msg object (except payload).
-
-v1.5.1 (3 Mar 22) - Refactored code
-
-v1.5.0 (28 Feb 22) - Able to set 0 as starting or ending brightness.
-
-v1.4.6 (28 Feb 22) - Fixed issue where sending any change to 'units' wouldn't be used.
-
-v1.4.3 (10 Feb 22) - Fixed another issue where RGB value could be above 255 when using Half & Half mode.
-
-v1.4.2 (29 Dec 21) - Fixed issue where values wouldn't be reset after STOP command sent.
-
-v1.4.1 (29 Nov 21) - Fixed issue where RGB value could be above 255 when using Half & Half mode.
-
-v1.4.0 (28 Nov 21) - Added brightness to outputs.
-
-v1.3.1 (28 Nov 21) - Fixed brightness integer input max value.
-
-v1.3.0 (1 Nov 21) - Added brightnessType. Can now select between brightness percent and a brightness integer value for input only.
-
-v1.2.1 (6 Sep 21) - Changed Image path in README
-
-v1.2.0 (6 Sep 21) - Added the ability to change the type of color transition.
-
-v1.1.0 (2 Sep 21) - Added color_temp(mired) transition & fixed linear brightness_pct formula.
-
-v1.0.1 (1 Sep 21) - Icon fix
-
-v1.0.0 (1 Sep 21) - Initial release
+[The change log can be found here](https://github.com/mochman/node-red-contrib-light-transition/blob/main/CHANGELOG.md)
