@@ -41,9 +41,9 @@
 		<label for="node-input-transitionTime"><i class="fa fa-clock-o"></i> <span data-i18n="light-transition.label.time"></label>
 		<input type="text" id="node-input-transitionTime" style="text-align:end; width:70px !important">
 		<select id="node-input-transitionTimeUnits" style="width:140px !important">
-			<option value="Second">Seconds</option>
-			<option value="Minute">Minutes</option>
-			<option value="Hour">Hours</option>
+			<option value="Second" data-i18n="node-red:delay.secs"></option>
+			<option value="Minute" data-i18n="node-red:delay.mins"></option>
+			<option value="Hour" data-i18n="node-red:delay.hours"></option>
 		</select>
 	</div>
 	<div class="form-row">
@@ -120,12 +120,4 @@
 			<option value="Exponential">Exponential</option>
 		</select>
 	</div>
-</script>
-
-<script type="text/html" data-help-name="light-transition">
-		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.brightness</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
-	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
-	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.
-	<p>Properties can be overridden via <code>msg.transition</code> messages supplemented with property name.</p>
-	<p>Accepted messages for loop are <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition.startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startMired</code>, <code>msg.transition.endMired</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, <code>msg.transition.brightnessType</code>, <code>msg.transition.transitionType</code>, and <code>colorTransitionType</code></p>
 </script>
