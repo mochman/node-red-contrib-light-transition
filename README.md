@@ -83,6 +83,10 @@ Any time a `msg.transition` is sent to the node, the settings are changed and th
 This node will stop running when it has reached the last step. It will send a `msg.payload` of `complete` out of the second output on the node.
 You can also manually stop the node by sending a `msg.payload` of `stop` or `STOP`. The node will end its loop and send a `msg.payload` of `stopped` out of the second output.
 
+## **Localization**
+
+If you would like to help with translating, please see the [locales](https://github.com/mochman/node-red-contrib-light-transition/tree/main/locales) folder for examples of what needs to be translated.
+
 ## **Notes**
 
 - If the "Weighted" color transition is changing colors too fast, try using the "Half & Half" transition type.
