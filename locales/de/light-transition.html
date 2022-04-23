@@ -1,0 +1,7 @@
+<script type="text/html" data-help-name="light-transition">
+  <p>Ändert schrittweise die Helligkeit und die ausgewählten RGB-Farben.  Schleifen für <code>Schritte</code> mal über <code>Gesamtzeit</code>. Ausstoß <code>msg.payload.brightness_pct</code>, <code>msg.payload.brightness</code>, <code>msg.payload.rgb_color</code>, und <code>msg.payload.color_temp</code> mit einer leichten Entität zu verwenden.</p>
+  <p>Die Änderungsrate der Helligkeit kann durch Auswahl von Linear oder Exponential in <code>Transition Style</code> geändert werden</p>
+  <p>Sie können den Zähler manuell stoppen, indem Sie eine Payload mit <code>stop</code> oder <code>STOP</code> senden.
+  <p>Eigenschaften können über <code>msg.transition</code>-Nachrichten, ergänzt durch Eigenschaftsnamen, überschrieben werden.</p>
+  <p>Akzeptierte Nachrichten für loop sind <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition .startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startMired</code>, <code>msg .transition.endMired</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, <code>msg.transition.brightnessType</code>, <code >msg.transition.transitionType</code> und <code>colorTransitionType</code>.</p>
+</script>

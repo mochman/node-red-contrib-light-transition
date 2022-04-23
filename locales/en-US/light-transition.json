@@ -1,0 +1,33 @@
+{
+	"light-transition": {
+		"label": {
+			"time": "Total Time",
+			"steps": "# of steps",
+			"transition": "Transition",
+			"colors": "Colors",
+			"brightness": "Brightness",
+			"value": "Value",
+			"starting": "Starting",
+			"middle": "Middle",
+			"end": "End",
+			"type": "Type"
+		},
+		"description": {
+			"running": "running",
+			"every": "Every",
+			"completed": "completed at"
+		},
+		"errors": {
+			"invalidA": "Invalid attribute",
+			"formatted": "must be formatted like #ffab13",
+			"posInt": "must be a positive integer",
+			"brightnessVal": "must be between 0 and 255",
+			"allowedVals": "allowed values are"
+		},
+		"time": {
+			"Second": "Second",
+			"Minute": "Minute",
+			"Hour": "Hour"
+		}
+	}
+}

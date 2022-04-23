@@ -22,7 +22,8 @@
     outputs: 2,
     icon: "font-awesome/fa-lightbulb-o",
     label: function () {
-      return this.name || this.transitionTime + " " + this.transitionTimeUnits + " Transition";
+      const name = 'light-transition.time.' + this.transitionTimeUnits;
+      return this.name || `${this.transitionTime} ${this._(name)} ${this._('light-transition.label.transition')}`;
     },
     labelStyle: function () {
       return this.name ? "node_label_italic" : "";
@@ -33,34 +34,34 @@
 
 <script type="text/html" data-template-name="light-transition">
   <div class="form-row">
-		<label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-		<input type="text" id="node-input-name" placeholder="Name"></input>
+		<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="node-red:common.label.name"></label>
+		<input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
 	</div>
 	<div class="form-row">
-		<label for="node-input-transitionTime"><i class="fa fa-clock-o"></i> Total Time</label>
+		<label for="node-input-transitionTime"><i class="fa fa-clock-o"></i> <span data-i18n="light-transition.label.time"></label>
 		<input type="text" id="node-input-transitionTime" style="text-align:end; width:70px !important">
 		<select id="node-input-transitionTimeUnits" style="width:140px !important">
-			<option value="Second">Seconds</option>
-			<option value="Minute">Minutes</option>
-			<option value="Hour">Hours</option>
+			<option value="Second" data-i18n="node-red:delay.secs"></option>
+			<option value="Minute" data-i18n="node-red:delay.mins"></option>
+			<option value="Hour" data-i18n="node-red:delay.hours"></option>
 		</select>
 	</div>
 	<div class="form-row">
-		<label for="node-input-steps"><i class="fa fa-repeat"></i> # of steps</label>
+		<label for="node-input-steps"><i class="fa fa-repeat"></i> <span data-i18n="light-transition.label.steps"></label>
 		<input type="text" id="node-input-steps" style="text-align:end; width:100px !important">
 	</div>
   <div style="margin:0px; line-height: 0%">
     <hr style="margin-top:10px; margin-bottom:10px">
-    <h3>Colors:</h3>
+    <h3><span data-i18n="light-transition.label.colors">:</h3>
   </div>
   <div class="form-row">
     <table style="border-collapse: collapse; border:none; width:100%">
       <tbody>
         <tr>
           <th></th>
-          <th style="text-align:center">Starting</th>
-          <th style="text-align:center">Middle</th>
-          <th style="text-align:center">End</th>
+          <th style="text-align:center"><span data-i18n="light-transition.label.starting"></th>
+          <th style="text-align:center"><span data-i18n="light-transition.label.middle"></th>
+          <th style="text-align:center"><span data-i18n="light-transition.label.end"></th>
         </tr>
         <tr>
           <td><i class="fa fa-eyedropper"></i> RGB</td>
@@ -78,7 +79,7 @@
     </table>
   </div>
   <div class="form-row">
-		<label for="node-input-colorTransitionType"><i class="fa fa-line-chart"></i> Transition</label>
+		<label for="node-input-colorTransitionType"><i class="fa fa-line-chart"></i> <span data-i18n="light-transition.label.transition"></label>
 		<select id="node-input-colorTransitionType" style="width:170px !important">
 			<option value="Weighted">Weighted</option>
 			<option value="Half">Half & Half</option>
@@ -87,18 +88,18 @@
 	</div>
   <div style="margin:0px; line-height: 0%">
     <hr style="margin-top:10px; margin-bottom:10px">
-    <h3>Brightness:</h3>
+    <h3><span data-i18n="light-transition.label.brightness">:</h3>
   </div>
   <div class="form-row">
     <table style="border-collapse: collapse; border:none; width:50%">
       <tbody>
         <tr>
           <th></th>
-          <th style="text-align:center">Starting</th>
-          <th style="text-align:center">End</th>
+          <th style="text-align:center"><span data-i18n="light-transition.label.starting"></th>
+          <th style="text-align:center"><span data-i18n="light-transition.label.end"></th>
         </tr>
         <tr>
-          <td><i class="fa fa-lightbulb-o"></i> Value</td>
+          <td><i class="fa fa-lightbulb-o"></i> <span data-i18n="light-transition.label.value"></td>
           <td style="text-align:center"><input type="text" id="node-input-startBright" style="text-align:end; width:70px !important"></td>
           <td style="text-align:center"><input type="text" id="node-input-endBright" style="text-align:end; width:70px !important"></td>
         </tr>
@@ -106,25 +107,17 @@
     </table>
   </div>
   <div class="form-row">
-		<label for="node-input-brightnessType"><i class="fa fa-arrows-v"></i> Type</label>
+		<label for="node-input-brightnessType"><i class="fa fa-arrows-v"></i> <span data-i18n="light-transition.label.type"></label>
 		<select id="node-input-brightnessType" style="width:140px !important">
 			<option value="Percent">Percent</option>
 			<option value="Integer">Integer</option>
 		</select>
 	</div>
 	<div class="form-row">
-		<label for="node-input-transitionType"><i class="fa fa-line-chart"></i> Transition</label>
+		<label for="node-input-transitionType"><i class="fa fa-line-chart"></i> <span data-i18n="light-transition.label.transition"></label>
 		<select id="node-input-transitionType" style="width:140px !important">
 			<option value="Linear">Linear</option>
 			<option value="Exponential">Exponential</option>
 		</select>
 	</div>
-</script>
-
-<script type="text/html" data-help-name="light-transition">
-		<p>Will incrementally change the brightness and RGB colors selected.  Loops for <code>Steps</code> times over <code>Total Time</code>. Outputs <code>msg.payload.brightness_pct</code>, <code>msg.payload.brightness</code>, <code>msg.payload.rgb_color</code>, and <code>msg.payload.color_temp</code> to use with a light entity.</p>
-	<p>The rate of change of the brightness can be modifed by selecting Linear or Exponential in the <code>Transition Style</code></p>
-	<p>You can manually stop the coutner by sending a payload with <code>stop</code> or <code>STOP</code>.
-	<p>Properties can be overridden via <code>msg.transition</code> messages supplemented with property name.</p>
-	<p>Accepted messages for loop are <code>msg.transition.duration</code>, <code>msg.transition.units</code>, <code>msg.transition.steps</code>, <code>msg.transition.startRGB</code>, <code>msg.transition.transitionRGB</code>, <code>msg.transition.endRGB</code>, <code>msg.transition.startMired</code>, <code>msg.transition.endMired</code>, <code>msg.transition.startBright</code>, <code>msg.transition.endBright</code>, <code>msg.transition.brightnessType</code>, <code>msg.transition.transitionType</code>, and <code>colorTransitionType</code></p>
 </script>
