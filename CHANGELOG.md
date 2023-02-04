@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2023-02-04
+
+### Changed
+
+- Require node >= 14, npm >=6.14.4, node-red >=3.0.0
+
 ## [1.7.4] - 2022-04-23
 
 ### Added
@@ -147,7 +153,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Release
 
-[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.7.4...HEAD
+[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.8.0
 [1.7.4]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.4
 [1.7.3]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.3
 [1.7.2]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.2

@@ -1,6 +1,6 @@
 {
 	"name": "node-red-contrib-light-transition",
-	"version": "1.7.4",
+	"version": "1.8.0",
 	"description": "Transitions a light's color & brightness based on defined settings.",
 	"main": "light-transition.js",
 	"scripts": {
@@ -16,7 +16,7 @@
 		"wakeup"
 	],
 	"node-red": {
-		"version": ">=2.0.0",
+		"version": ">=3.0.0",
 		"nodes": {
 			"light-transition": "light-transition.js"
 		}
@@ -25,9 +25,9 @@
 		"loop": "2.1.2"
 	},
 	"devDependencies": {
-		"node-red": "^2.0.0",
-		"mocha": "^9.2.1",
-		"node-red-node-test-helper": "^0.2.7",
+		"node-red": "^3.0.0",
+		"mocha": "^10.2.0",
+		"node-red-node-test-helper": "^0.3.0",
 		"prettier": "2.5.1"
 	},
 	"author": {
@@ -42,7 +42,7 @@
 	"bugs": "https://www.github.com/mochman/node-red-contrib-light-transition/issues",
 	"homepage": "https://www.github.com/mochman/node-red-contrib-light-transition",
 	"engines": {
-		"node": ">=12",
-		"npm": ">=6.9"
+		"node": ">=14",
+		"npm": ">=6.14.4"
 	}
 }
