@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.1] - 2023-05-23
+
+### Changed
+
+- Fixed an issue where colors may not change when using large number of steps in 'Weighted' mode.
+- Node-Red v3 github actions.
+- Node versions for tests.
+
 ## [1.8.0] - 2023-02-04
 
 ### Changed
@@ -153,7 +161,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Release
 
-[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.8.0...HEAD
+[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.8.1
 [1.8.0]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.8.0
 [1.7.4]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.4
 [1.7.3]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.3

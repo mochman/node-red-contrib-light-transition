@@ -311,16 +311,16 @@ module.exports = function (RED) {
                           let d1 = [];
                           let d2 = [];
                           for (let i = 0; i < 3; i++) {
-                            d1[i] = Math.trunc((colors[1][i] - colors[0][i]) / tMid);
-                            d2[i] = Math.trunc((colors[2][i] - colors[1][i]) / (node.steps - tMid));
+                            d1[i] = (colors[1][i] - colors[0][i]) / tMid;
+                            d2[i] = (colors[2][i] - colors[1][i]) / (node.steps - tMid);
                           }
                           // Either add the transition 'distance' to the starting RGB values or the transition RGB value
                           if(data < tMid) {
-                            colorChange[i] = colors[0][i] + data * d1[i];
+                            colorChange[i] = Math.trunc(colors[0][i] + data * d1[i]);
                           } else if(data === tMid) {
                             colorChange[i] = colors[1][i];
                           }
-                          else colorChange[i] = colors[1][i] + (data - tMid) * d2[i];
+                          else colorChange[i] = Math.trunc(colors[1][i] + (data - tMid) * d2[i]);
                           break;
                         case 'Half':
                           // Find the middle number of total steps, then subtract the average distance / steps from the starting/transition RGB values
