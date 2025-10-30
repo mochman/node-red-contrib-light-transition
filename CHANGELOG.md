@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.9.0] - 2025-10-30
+## [1.9.1] - 2025-10-30
 
 - Added color_temp_kelvin to outputs for deprecation of color_temp in Home Assistant 2026.1.
 
@@ -165,8 +165,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial Release
 
-[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.9.0...HEAD
-[1.9.0]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.9.0
+[unreleased]: https://github.com/mochman/node-red-contrib-light-transition/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.9.1
 [1.8.1]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.8.1
 [1.8.0]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.8.0
 [1.7.4]: https://github.com/mochman/node-red-contrib-light-transition/releases/tag/v1.7.4
