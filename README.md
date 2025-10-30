@@ -22,7 +22,8 @@ This node was created to help with lights in Home Assistant that don't work with
   "brightness_pct": <1-100>,
   "brightness": <1-255>,
   "rgb_color": [<0-255>,<0-255>,<0-255>],
-  "color_temp": <Integer>
+  "color_temp": <Integer>,
+  "color_temp_kelvin": <Integer>,
 }
 ```
 

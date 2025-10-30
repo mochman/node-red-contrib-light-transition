@@ -261,6 +261,7 @@ module.exports = function (RED) {
               brightness: scale(node.startBright),
               rgb_color: colors[0],
               color_temp: node.startMired,
+							color_temp_kelvin: Math.round(1000000 / node.startMired),
             };
           node.send([lightMsg, null]);
           msg._timerpass = true;
@@ -278,6 +279,7 @@ module.exports = function (RED) {
                       brightness: scale(node.endBright),
                       rgb_color: colors[2],
                       color_temp: node.endMired,
+											color_temp_kelvin: Math.round(1000000 / node.endMired),
                     };
                   mlmsg = RED.util.cloneMessage(msg);
                   mlmsg.payload = 'complete';
@@ -362,6 +364,7 @@ module.exports = function (RED) {
                         brightness: scale(brightnessChange),
                         rgb_color: colorChange,
                         color_temp: miredChange,
+												color_temp_kelvin: Math.round(1000000 / miredChange),
                       };
                     node.send([lightMsg, null]);
                     timeout = null;
