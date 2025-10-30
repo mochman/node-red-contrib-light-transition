@@ -45,12 +45,14 @@ let trys = [
 			brightness_pct: 35,
 			color_temp: 423,
 			rgb_color: [255, 0, 0],
+			color_temp_kelvin: Math.round(1000000 / 423),
 		},
 		{
 			brightness: 222,
 			brightness_pct: 87,
 			color_temp: 100,
 			rgb_color: [255, 255, 255],
+      color_temp_kelvin: Math.round(1000000 / 100),
 		},
 	],
 	[
@@ -70,12 +72,14 @@ let trys = [
 			brightness_pct: 100,
 			color_temp: 200,
 			rgb_color: [18, 52, 86],
+			color_temp_kelvin: Math.round(1000000 / 200),
 		},
 		{
 			brightness: 36,
 			brightness_pct: 14,
 			color_temp: 600,
 			rgb_color: [250, 0, 36],
+			color_temp_kelvin: Math.round(1000000 / 600),
 		},
 	],
 ];
@@ -129,6 +133,7 @@ describe('light-transition Node - Function Tests', function () {
 			brightness_pct: 1,
 			color_temp: 200,
 			rgb_color: [255, 0, 0],
+			color_temp_kelvin: Math.round(1000000 / 200),
 		};
 
 		helper.load(lightNode, startingFlow, function () {
