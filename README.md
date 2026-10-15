@@ -29,6 +29,20 @@ This node was created to help with lights in Home Assistant that don't work with
 
 that can be used with a call service node to incrementally change the color and brightness of the light.
 
+The Home Assistant action nodes read the service data from `msg.payload.data`. Set **Payload** to `msg.payload.data.brightness (Home Assistant)` and the same values are sent as `msg.payload.data`, so the output can be wired straight into the node:
+
+```
+{
+  "data": {
+    "brightness_pct": <1-100>,
+    "brightness": <1-255>,
+    "rgb_color": [<0-255>,<0-255>,<0-255>],
+    "color_temp": <Integer>,
+    "color_temp_kelvin": <Integer>,
+  }
+}
+```
+
 ## **Installation:**
 
 > npm install node-red-contrib-light-transition
@@ -56,8 +70,14 @@ This node can be configured manually or by passing it a specific payload. The ma
   - **Weighted** - Uses the ["redmean" distance approximation](https://en.wikipedia.org/wiki/Color_difference#sRGB) to determine the amount of change between the colors. It adjusts the number of steps based on the difference in the change between the Start->Transition & Transition->End "distances".
   - **Half & Half** - Just splits the number of total steps in half so the transition color will be in the middle.
   - **None** - Disregards the transition color entirely and changes the color from Start->End.
+- **Rounding** - How the Weighted color is converted to whole RGB numbers.
+  - **Truncate** - The original behavior.
+  - **Round** - Smoother with a high number of steps. Truncating throws away part of the possible colors: for a white-yellow-red transition with 1800 steps it sends about 400 different colors, rounding sends about 500 (the path has about 506).
+- **Payload** - Where the values are placed in the output message.
+  - **msg.payload.brightness** - The values are in `msg.payload` (default).
+  - **msg.payload.data.brightness (Home Assistant)** - The values are in `msg.payload.data`.
 
-The node can also be configured by sending it a specific `msg.transition` object:
+The node can also be configured by sending it a specific `msg.transition` object. Besides the settings above, `msg.transition.colorRounding` (`Truncate` or `Round`) and `msg.transition.payloadFormat` (`Flat` or `HomeAssistant`) can be set:
 
 ```
 {

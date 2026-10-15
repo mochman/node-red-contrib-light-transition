@@ -17,6 +17,8 @@
       brightnessType: { value: "Percent" },
       transitionType: { value: "Linear" },
       colorTransitionType: { value: "Weighted"},
+      colorRounding: { value: "Truncate" },
+      payloadFormat: { value: "Flat" },
     },
     inputs: 1,
     outputs: 2,
@@ -28,7 +30,12 @@
     labelStyle: function () {
       return this.name ? "node_label_italic" : "";
     },
-    outputLabels: ["original msg", "stopped msg"]
+    outputLabels: ["original msg", "stopped msg"],
+    oneditprepare: function () {
+      // Nodes saved by earlier versions do not have these two settings yet, show the defaults
+      if (!this.colorRounding) $('#node-input-colorRounding').val('Truncate');
+      if (!this.payloadFormat) $('#node-input-payloadFormat').val('Flat');
+    }
   });
 </script>
 
@@ -86,6 +93,13 @@
       <option value="None">No Transition Color</option>
 		</select>
 	</div>
+  <div class="form-row">
+		<label for="node-input-colorRounding"><i class="fa fa-eyedropper"></i> <span data-i18n="light-transition.label.colorRounding"></label>
+		<select id="node-input-colorRounding" style="width:170px !important">
+			<option value="Truncate">Truncate</option>
+			<option value="Round">Round (smoother)</option>
+		</select>
+	</div>
   <div style="margin:0px; line-height: 0%">
     <hr style="margin-top:10px; margin-bottom:10px">
     <h3><span data-i18n="light-transition.label.brightness">:</h3>
@@ -118,6 +132,17 @@
 		<select id="node-input-transitionType" style="width:140px !important">
 			<option value="Linear">Linear</option>
 			<option value="Exponential">Exponential</option>
+		</select>
+	</div>
+  <div style="margin:0px; line-height: 0%">
+    <hr style="margin-top:10px; margin-bottom:10px">
+    <h3><span data-i18n="light-transition.label.output">:</h3>
+  </div>
+  <div class="form-row">
+		<label for="node-input-payloadFormat"><i class="fa fa-sign-out"></i> <span data-i18n="light-transition.label.payloadFormat"></label>
+		<select id="node-input-payloadFormat" style="width:250px !important">
+			<option value="Flat">msg.payload.brightness</option>
+			<option value="HomeAssistant">msg.payload.data.brightness (Home Assistant)</option>
 		</select>
 	</div>
 </script>

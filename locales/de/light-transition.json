@@ -10,7 +10,10 @@
 			"starting": "Beginn",
 			"middle": "Mitte",
 			"end": "Ende",
-			"type": "Art"
+			"type": "Art",
+			"output": "Ausgabe",
+			"payloadFormat": "Payload",
+			"colorRounding": "Rundung"
 		},
 		"description": {
 			"running": "Ausführung",

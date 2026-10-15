@@ -10,7 +10,10 @@
 			"starting": "Starting",
 			"middle": "Middle",
 			"end": "End",
-			"type": "Type"
+			"type": "Type",
+			"output": "Output",
+			"payloadFormat": "Payload",
+			"colorRounding": "Rounding"
 		},
 		"description": {
 			"running": "running",

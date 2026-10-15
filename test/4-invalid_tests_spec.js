@@ -47,6 +47,8 @@ let trys = [
 	{ brightnessType: 'bad' },
 	{ transitionType: 'bad' },
 	{ colorTransitionType: 'bad' },
+	{ colorRounding: 'bad' },
+	{ payloadFormat: 'bad' },
 ];
 
 describe('light-transition Node - Invalid Input Tests', function () {

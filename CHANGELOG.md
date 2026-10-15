@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-10-15
+
+### Added
+
+- `Payload` option / `msg.transition.payloadFormat` (`Flat` or `HomeAssistant`). `HomeAssistant` puts the values under `msg.payload.data`, which is where the Home Assistant action nodes read them (#48). The default (`Flat`) is unchanged.
+- `Rounding` option / `msg.transition.colorRounding` (`Truncate` or `Round`) for the Weighted color transition. `Round` uses far more of the available colors with a high number of steps (#47). The default (`Truncate`) is unchanged.
+- Short (`#f80`) and RGBA (`#ff8800cc`, alpha ignored) hex colors are accepted. The editor and the input check already allowed them, but they used to crash the node.
+- Tests that compare the output with the output of 1.9.1, and tests for the new options.
+
+### Changed
+
+- Removed the `loop` dependency. The node now uses one timer per step that is scheduled relative to the start of the transition, so the steps no longer drift (before, every step took a little longer than the configured time) and no extra timer is left running when a transition is stopped or restarted.
+- A running transition keeps its own copy of the settings, so a later (invalid) message can no longer change it.
+
+### Fixed
+
+- `# of steps` = 1 no longer sends a message with `NaN` values after the total time, it sends the end values and `complete`.
+- The Weighted transition no longer gives `NaN` colors when the start, transition and end colors are identical.
+- An empty color in `msg.transition` falls back to the default color instead of crashing the node.
+- A `null` payload no longer throws an error.
+
 ## [1.9.1] - 2025-10-30
 
 - Added color_temp_kelvin to outputs for deprecation of color_temp in Home Assistant 2026.1.

@@ -1,63 +1,15 @@
+const {
+  calcDuration, readableDuration, buildPlan, valuesAt,
+} = require('./lib/transition.js');
+
 module.exports = function (RED) {
-  let Looper = require('loop');
-
-  let unitMap = [
-    { unit: 'Millisecond', multiplier: 1, duration: 1 },
-    { unit: 'Second', multiplier: 1000, get duration() { return unitMap[0].duration * unitMap[1].multiplier } },
-    { unit: 'Minute', multiplier: 60, get duration() { return unitMap[1].duration * unitMap[2].multiplier } },
-    { unit: 'Hour', multiplier: 60, get duration() { return unitMap[2].duration * unitMap[3].multiplier } },
-    { unit: 'Day', multiplier: 24, get duration() { return unitMap[3].duration * unitMap[4].multiplier } }
-  ]
-
-  function CalcDuration(unit, duration) {
-    return (unitMap.find(o => o.unit === unit).duration * duration);
-  }
-
-  // Takes in ms and returns a string with human readable times i.e. "45 Seconds" / "3 Hours"
-  function readableDuration(duration) {
-    let maxSeconds = 90;
-    let maxMinutes = 59;
-    let seconds = parseInt(duration) / 1000;
-    if(seconds <= maxSeconds) {
-      return Math.round(seconds * 10) / 10 + ' ' + (seconds > 1 ? RED._('node-red:delay.secs') : RED._('node-red:delay.sec'));
-    } else if(seconds/60 <= maxMinutes) {
-      return Math.round(seconds/6) / 10 + ' ' + (seconds/60 > 1 ? RED._('node-red:delay.mins') : RED._('node-red:delay.min'));
-    } else {
-      return Math.round(seconds/360) / 10 + ' ' + (seconds/3600 > 1 ? RED._('node-red:delay.hours') : RED._('node-red:delay.hour'));
-    }
-  }
-
-  // Takes in "#fa12b3" and returns an array with decimal values i.e. [250,18,179]
-  function hexToRGB(hex) {
-    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-      parseInt(result[1], 16),
-      parseInt(result[2], 16),
-      parseInt(result[3], 16)
-    ] : null;
-  }
-
-  // Linear interpolation of input y given starting and ending ranges
-  function scale(y, range1 = [0,100], range2 = [0,255]) {
-    const [xMin, xMax] = range2;
-    const [yMin, yMax] = range1;
-    const percent = (y - yMin) / (yMax - yMin);
-    const ans = percent * (xMax - xMin) + xMin;
-    return Math.round(ans);
-  }
-
   function LightTransition(n) {
     RED.nodes.createNode(this, n);
     let node = this;
-    let transition = null;
-    let timeout = null;
-    let stopped = false;
-    let stopmsg = null;
-    let mlmsg = null;
+    let current = null; // state of the running transition, null when idle
     let rgbRegex = new RegExp('^(#(?:(?:[A-F0-9]{2}){3,4}|[A-F0-9]{3})|)$', 'i');
 
     this.on('input', function (msg) {
-      transition = Looper();
       this.nodeduration = n.nodeduration || 1;
       this.nodemaxtimeout = n.nodemaxtimeout || 1;
       this.startRGB = n.startRGB || '#ff0000';
@@ -73,6 +25,8 @@ module.exports = function (RED) {
       this.brightnessType = n.brightnessType || 'Percent';
       this.transitionType = n.transitionType || 'Linear';
       this.colorTransitionType = n.colorTransitionType || 'Weighted';
+      this.payloadFormat = n.payloadFormat || 'Flat';
+      this.colorRounding = n.colorRounding || 'Truncate';
       if (this.transitionTime <= 1) this.transitionTime = 1;
 
       // Input checking of any received msg
@@ -207,191 +161,121 @@ module.exports = function (RED) {
             return;
           }
         }
-      } // End Input Checking
 
-      node.nodeduration = CalcDuration(node.transitionTimeUnits, node.transitionTime / node.steps);
-      node.nodemaxtimeout = CalcDuration(node.transitionTimeUnits, node.transitionTime + 5);
-      transition.setTimeout(node.nodemaxtimeout);
-      transition.setMaxLoop(node.steps - 1);
-
-      //Make sure starting and ending brightness are within 0-100%, scaling if not using 'Percent'
-      if(node.startBright < 0) node.startBright = 0;
-      if(node.endBright < 0) node.endBright = 0;
-
-      switch(node.brightnessType) {
-        case 'Percent':
-          if(node.startBright > 100) node.startBright = 100;
-          if(node.endBright > 100) node.endBright = 100;
-          break;
-        case 'Integer':
-          if(node.startBright > 255) node.startBright = 255;
-          if(node.endBright > 255) node.endBright = 255;
-          node.startBright = scale(node.startBright, [0,255], [0,100]);
-          node.endBright = scale(node.endBright, [0,255], [0,100]);
-          break;
-      }
-
-      let colors = [];
-      let deltas = [];
-      let means = [];
-      let changeDist = [];
-      colors.push(hexToRGB(node.startRGB));
-      colors.push(hexToRGB(node.transitionRGB));
-      colors.push(hexToRGB(node.endRGB));
-
-      if (stopped === false || msg._timerpass !== true) {
-        stopped = false;
-        clearTimeout(timeout);
-        timeout = null;
-        if (msg.payload !== undefined && msg.payload.toString().toLowerCase() === 'stop') {
-          // If msg.payload is sent a stop command, stop the loop and quit
-          node.status({ fill: 'red', shape: 'ring', text: `node-red:inject.stopped` });
-          stopped = true;
-          stopmsg = RED.util.cloneMessage(msg);
-          stopmsg.payload = 'stopped';
-          delete stopmsg['_timerpass'];
-          node.send([null, stopmsg]);
-          stopped = false;
-        } else {
-          // Initial loop output
-          let lightMsg = RED.util.cloneMessage(msg); // Copy msg object to preserve user keys i.e. msg.topic
-          delete lightMsg['_timerpass']; // Remove internal timerpass key
-          lightMsg.payload = {
-              brightness_pct: node.startBright,
-              brightness: scale(node.startBright),
-              rgb_color: colors[0],
-              color_temp: node.startMired,
-							color_temp_kelvin: Math.round(1000000 / node.startMired),
-            };
-          node.send([lightMsg, null]);
-          msg._timerpass = true;
-          transition.run(function (next, err, data) {
-            node.status({ fill: 'green', shape: 'ring', text: `${RED._('light-transition.description.running')} ${data + 1}/${node.steps} - ${RED._('light-transition.description.every')} ${readableDuration(node.nodeduration)}` });
-            data++;
-            timeout = setTimeout(function () {
-              if (stopped === false) {
-                if (data == node.steps - 1) {
-                  // Final loop output
-                  let lightMsg = RED.util.cloneMessage(msg);
-                  delete lightMsg['_timerpass'];
-                    lightMsg.payload = {
-                      brightness_pct: node.endBright,
-                      brightness: scale(node.endBright),
-                      rgb_color: colors[2],
-                      color_temp: node.endMired,
-											color_temp_kelvin: Math.round(1000000 / node.endMired),
-                    };
-                  mlmsg = RED.util.cloneMessage(msg);
-                  mlmsg.payload = 'complete';
-                  delete mlmsg['_timerpass'];
-                  node.send([lightMsg, mlmsg]);
-                  let now = new Date;
-                  let splitDate = now.toDateString().split(' ');
-                  let splitTime = now.toTimeString().split(':');
-                  let goodDate = splitDate[1] + ' ' + splitDate[2] + ', ' + splitTime[0] + ':' + splitTime[1];
-                  node.status({ fill: 'green', shape: 'dot', text: `${RED._('light-transition.description.completed')} ${goodDate}` });
-                  timeout = null;
-                  next('break');
-                } else {
-                  // All other loop outputs
-                  node.status({});
-                  if ((data * node.nodeduration) <= node.nodemaxtimeout) {
-                    let colorChange = [0,0,0];
-                    for(let i = 0; i < colorChange.length; i++) {
-                      switch (node.colorTransitionType) {
-                        case 'Weighted':
-                          // Finds the 'distance' between the starting/transition/ending colors using the redmean approximation
-                          // https://en.wikipedia.org/wiki/Color_difference#sRGB
-                          // d1 array will have the distance between starting & transition colors per steps required to arrive there.  d2 - transition & ending.
-                          // tMid will be the number of steps to the transition color.
-                          for (let i = 0; i < 2; i++) {
-                            deltas[i] = [colors[i][0] - colors[i + 1][0], colors[i][1] - colors[i + 1][1], colors[i][2] - colors[i + 1][2]];
-                            means[i] = (colors[i][0] + colors[i + 1][0]) / 2;
-                            changeDist[i] = Math.sqrt((2 + means[i] / 256) * deltas[i][0] * deltas[i][0] + 4 * deltas[i][1] * deltas[i][1] + (2 + (255 - means[i] / 256)) * deltas[i][2] * deltas[i][2]);
-                          }
-                          let tMid = Math.trunc(node.steps * changeDist[0] / (changeDist[0] + changeDist[1]));
-                          let d1 = [];
-                          let d2 = [];
-                          for (let i = 0; i < 3; i++) {
-                            d1[i] = (colors[1][i] - colors[0][i]) / tMid;
-                            d2[i] = (colors[2][i] - colors[1][i]) / (node.steps - tMid);
-                          }
-                          // Either add the transition 'distance' to the starting RGB values or the transition RGB value
-                          if(data < tMid) {
-                            colorChange[i] = Math.trunc(colors[0][i] + data * d1[i]);
-                          } else if(data === tMid) {
-                            colorChange[i] = colors[1][i];
-                          }
-                          else colorChange[i] = Math.trunc(colors[1][i] + (data - tMid) * d2[i]);
-                          break;
-                        case 'Half':
-                          // Find the middle number of total steps, then subtract the average distance / steps from the starting/transition RGB values
-                          let midPt = Math.floor((node.steps - 1) / 2);
-                          if(data == midPt) colorChange = hexToRGB(node.transitionRGB);
-                          else if(data <= midPt) colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[1][i]) / midPt * data);
-                          else colorChange[i] = colors[1][i] - Math.floor((colors[1][i] - colors[2][i]) / (node.steps - midPt - 1) * (data - midPt));
-                          break;
-                        case 'None':
-                          // Just increments the starting RGB value by the average of the starting & ending RGB values / num of steps.
-                          colorChange[i] = colors[0][i] - Math.floor((colors[0][i] - colors[2][i]) / node.steps * data);
-                          break;
-                      }
-                    }
-                    // Just increments the mired value by the average of the starting & ending mired values / num of steps.
-                    let miredChange = Math.floor((node.endMired - node.startMired) / (node.steps - 1) * data + node.startMired);
-                    let brightnessChange = 0;
-                    switch(node.transitionType) {
-                      case 'Exponential':
-                        const endBrightExp = node.endBright === 0 ? 1 : node.endBright;
-                        const startBrightExp = node.startBright === 0 ? 1 : node.startBright;
-                        let exponB = 0;
-                        if (node.startBright <= node.endBright) {
-                          exponB = Math.log(node.endBright / startBrightExp) / (node.steps - 1);
-                          brightnessChange = Math.floor(startBrightExp * Math.exp(exponB * data));
-                        } else {
-                          exponB = Math.log(startBrightExp / endBrightExp) / (node.steps - 1);
-                          brightnessChange = startBrightExp - Math.floor(endBrightExp * Math.exp(exponB * data)) + endBrightExp;
-                        }
-                        break;
-                      case 'Linear':
-                        brightnessChange = Math.trunc((node.endBright - node.startBright) / (node.steps - 1) * data + node.startBright);
-                        break;
-                    }
-                    let lightMsg = RED.util.cloneMessage(msg);
-                    delete lightMsg['_timerpass'];
-                      lightMsg.payload = {
-                        brightness_pct: brightnessChange,
-                        brightness: scale(brightnessChange),
-                        rgb_color: colorChange,
-                        color_temp: miredChange,
-												color_temp_kelvin: Math.round(1000000 / miredChange),
-                      };
-                    node.send([lightMsg, null]);
-                    timeout = null;
-                    if (((data + 1) * node.nodeduration) > node.nodemaxtimeout) {
-                      next('break');
-                    } else {
-                      next(undefined, data);
-                    }
-                  } else {
-                    timeout = null;
-                    next('break');
-                  }
-                }
-              } else {
-                timeout = null;
-                next('break');
-              }
-            }, node.nodeduration);
-          }, 0);
+        if (msg.transition.colorRounding != undefined) {
+          if ((msg.transition.colorRounding === 'Truncate') || (msg.transition.colorRounding === 'Round')) {
+            node.colorRounding = msg.transition.colorRounding;
+          } else {
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.colorRounding' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.colorRounding, ' + RED._('light-transition.errors.allowedVals') + ' Truncate or Round');
+            return;
+          }
         }
+
+        if (msg.transition.payloadFormat != undefined) {
+          if ((msg.transition.payloadFormat === 'Flat') || (msg.transition.payloadFormat === 'HomeAssistant')) {
+            node.payloadFormat = msg.transition.payloadFormat;
+          } else {
+            node.status({ fill: 'red', shape: 'ring', text: RED._('light-transition.errors.invalidA') + ' msg.transition.payloadFormat' });
+            node.error(RED._('light-transition.errors.invalidA') + ': msg.transition.payloadFormat, ' + RED._('light-transition.errors.allowedVals') + ' Flat or HomeAssistant');
+            return;
+          }
+        }
+      } // End Input Checking
+      node.nodeduration = calcDuration(node.transitionTimeUnits, node.transitionTime / node.steps);
+      node.nodemaxtimeout = calcDuration(node.transitionTimeUnits, node.transitionTime + 5);
+
+      // A new message always replaces the running transition
+      stopCurrent();
+
+      if (msg.payload != null && msg.payload.toString().toLowerCase() === 'stop') {
+        // If msg.payload is sent a stop command, stop the loop and quit
+        node.status({ fill: 'red', shape: 'ring', text: `node-red:inject.stopped` });
+        let stopmsg = RED.util.cloneMessage(msg);
+        stopmsg.payload = 'stopped';
+        delete stopmsg['_timerpass'];
+        node.send([null, stopmsg]);
+        return;
       }
+
+      // Everything the timers need is copied here, so later messages can not change a running transition
+      // With 'steps' = 1 there is still a first message, and the last one follows after the total time
+      const messages = Math.max(node.steps, 2);
+      const run = {
+        msg: msg,
+        plan: buildPlan(node, messages),
+        steps: node.steps,
+        last: messages - 1, // index of the final message
+        interval: node.nodeduration,
+        payloadFormat: node.payloadFormat,
+        startedAt: Date.now(),
+        index: 1, // index of the next message to send, the first one (0) goes out right now
+        timer: null,
+      };
+
+      // Initial loop output
+      node.send([lightMessage(run, 0), null]);
+      current = run;
+      runningStatus(run, 0);
+      schedule(run);
     });
-    this.on('close', function () {
-      stopped = false;
-      if (timeout) {
-        clearTimeout(timeout);
+
+    // Copy msg object to preserve user keys i.e. msg.topic, and remove the internal timerpass key
+    function lightMessage(run, index) {
+      let lightMsg = RED.util.cloneMessage(run.msg);
+      delete lightMsg['_timerpass'];
+      const values = valuesAt(run.plan, index);
+      // 'HomeAssistant' puts the values under payload.data, which is where the Home Assistant action nodes read them
+      lightMsg.payload = run.payloadFormat === 'HomeAssistant' ? { data: values } : values;
+      return lightMsg;
+    }
+
+    function runningStatus(run, index) {
+      const [value, unitKey] = readableDuration(run.interval);
+      node.status({ fill: 'green', shape: 'ring', text: `${RED._('light-transition.description.running')} ${index + 1}/${run.steps} - ${RED._('light-transition.description.every')} ${value} ${RED._('node-red:' + unitKey)}` });
+    }
+
+    function completed(run, lightMsg) {
+      let mlmsg = RED.util.cloneMessage(run.msg);
+      mlmsg.payload = 'complete';
+      delete mlmsg['_timerpass'];
+      node.send([lightMsg, mlmsg]);
+      let now = new Date;
+      let splitDate = now.toDateString().split(' ');
+      let splitTime = now.toTimeString().split(':');
+      let goodDate = splitDate[1] + ' ' + splitDate[2] + ', ' + splitTime[0] + ':' + splitTime[1];
+      node.status({ fill: 'green', shape: 'dot', text: `${RED._('light-transition.description.completed')} ${goodDate}` });
+    }
+
+    // Every message is due at a fixed time after the start, so the timers never drift
+    function schedule(run) {
+      const due = run.startedAt + run.index * run.interval;
+      run.timer = setTimeout(() => tick(run), Math.max(0, due - Date.now()));
+    }
+
+    function tick(run) {
+      run.timer = null;
+      const index = run.index;
+      if (index >= run.last) {
+        // Final loop output
+        current = null;
+        completed(run, lightMessage(run, index));
+      } else {
+        // All other loop outputs
+        node.send([lightMessage(run, index), null]);
+        run.index++;
+        runningStatus(run, index);
+        schedule(run);
       }
+    }
+
+    function stopCurrent() {
+      if (current && current.timer) clearTimeout(current.timer);
+      current = null;
+    }
+
+    this.on('close', function () {
+      stopCurrent();
       node.status({});
     });
   }
